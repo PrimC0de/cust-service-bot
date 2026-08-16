@@ -1,0 +1,24 @@
+General Deposit Questions
+
+For deposit questions that do not fit a specific issue:
+
+Deposit timing:
+- Normal processing: 5–60 minutes depending on method
+- Peak hours (evenings, weekends): may take up to 90 minutes
+- During maintenance: deposits pause and resume automatically after maintenance ends
+- "Will deposit take long right now?" — check Service Status page for current queue times
+
+Bank transfer and convenience store:
+- Bank transfer and convenience-store deposit are separate methods
+- Bank transfer does NOT need to be linked to a convenience store
+- Each method has its own flow under Wallet > Deposit
+
+General tips:
+- Always generate a deposit order BEFORE making payment
+- Pay the exact amount shown
+- Use the payment code or account number from the current order only
+- Do not reuse old deposit addresses or account numbers
+
+If unsure which deposit method to use, bank transfer is recommended for amounts over 5,000; convenience-store or ATM for smaller amounts or when bank limits are reached.
+
+Contact customer service with your member ID for any deposit question not resolved by the above.

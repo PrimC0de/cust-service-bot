@@ -1,0 +1,48 @@
+================================================================================
+PREDICTED INTENT: Promotion / Bonus / Rewards / VIP
+TOTAL SAMPLES: 4
+================================================================================
+
+--------------------------------------------------------------------------------
+Sample ID: RS-08
+Predicted Sub-intent: Birthday reward
+Masked Customer Conversation (Chinese):
+你好，生日禮金怎麼申請？
+English Translation:
+Hello, how do I apply for the birthday reward?
+Decisive Evidence:
+Explicitly asks how to apply for a birthday reward.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: RS-15
+Predicted Sub-intent: Red packet / named campaign
+Masked Customer Conversation (Chinese):
+老會員回歸有儲值一千送五百嗎？
+English Translation:
+Is there a returning-member promotion that gives 500 after depositing 1,000?
+Decisive Evidence:
+Asks whether a specific returning-member deposit campaign exists.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: RS-24
+Predicted Sub-intent: Eligibility / rejected application
+Masked Customer Conversation (Chinese):
+之前不小心按到⋯現在顯示申請失敗😭今天才第一次入金 ⏎ 抱歉
+English Translation:
+I accidentally tapped it earlier, and now the application shows as failed. Today was my first deposit—sorry.
+Decisive Evidence:
+The active issue is a failed application, with first-deposit context suggesting a promotion eligibility or rejection case.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: RS-26
+Predicted Sub-intent: Birthday reward
+Masked Customer Conversation (Chinese):
+生日有什麼活動嗎
+English Translation:
+Are there any birthday promotions?
+Decisive Evidence:
+The customer explicitly asks about birthday-related promotions.
+--------------------------------------------------------------------------------

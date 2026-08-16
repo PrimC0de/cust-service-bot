@@ -1,0 +1,19 @@
+Proof Submitted and Manual Posting
+
+Most deposits are credited automatically once the system matches your payment. You do NOT need to contact customer service for every deposit.
+
+Manual posting is required only in these cases:
+- Convenience-store deposit where the receipt could not be auto-matched
+- Bank transfer with incorrect reference number
+- Deposit amount does not match the submitted form amount
+- Payment made outside the deposit flow (direct transfer without generating a deposit order)
+
+When manual posting is needed:
+1. Go to Wallet > Deposit History > Submit Proof.
+2. Upload a clear photo of your payment receipt or bank transfer screenshot.
+3. Include the deposit order number if available.
+4. Processing takes 10–30 minutes during business hours.
+
+For standard bank transfers and USDT deposits completed through the normal deposit flow, crediting is automatic. Do not message customer service unless the expected processing time has passed.
+
+Business hours for manual review: 09:00–02:00 daily. Submissions outside hours are processed at the start of the next business period.

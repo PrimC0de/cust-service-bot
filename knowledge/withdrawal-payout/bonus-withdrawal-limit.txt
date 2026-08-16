@@ -1,0 +1,23 @@
+Bonus Withdrawal Limits
+
+Promotional and bonus credit has separate withdrawal rules from your main balance:
+
+General bonus withdrawal rules:
+- Bonus credit must meet turnover (wagering) requirements before withdrawal
+- Standard turnover: 1x–15x depending on promotion type
+- Maximum withdrawable amount from bonus may be capped (e.g. 5x the bonus amount)
+- Bonus and main balance withdraw separately
+
+To check your bonus withdrawal limit:
+1. Go to Wallet > Bonus Balance.
+2. View "Withdrawable Amount" and "Remaining Turnover Required."
+3. The withdrawable amount updates automatically as you complete wagering.
+
+If you ask "is there a limit on promotional credit withdrawal?" — yes:
+- You can only withdraw bonus-derived winnings up to the promotion's maximum payout cap
+- Uncompleted turnover blocks withdrawal of bonus-related funds
+- Some promotions restrict withdrawal to main balance only after turnover is complete
+
+VIP members may have higher bonus withdrawal caps. Check your promotion terms under Promotions > My Bonuses for specific limits on active offers.
+
+Contact customer service with your promotion name for exact turnover and withdrawal cap details.

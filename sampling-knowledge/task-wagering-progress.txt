@@ -1,0 +1,15 @@
+================================================================================
+PREDICTED INTENT: Task / Wagering Progress
+TOTAL SAMPLES: 1
+================================================================================
+
+--------------------------------------------------------------------------------
+Sample ID: RS-21
+Predicted Sub-intent: Daily task not completed after wagering
+Masked Customer Conversation (Chinese):
+請問我從每日任務按進體育投注了兩次500成功，但是任務還是顯示未完成？
+English Translation:
+I entered sports betting through the daily task and successfully placed two bets of 500, but the task still shows as incomplete. Why?
+Decisive Evidence:
+The issue is task-progress recognition after sports wagers, which is outside the current five intents.
+--------------------------------------------------------------------------------

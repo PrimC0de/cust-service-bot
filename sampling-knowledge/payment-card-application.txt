@@ -1,0 +1,15 @@
+================================================================================
+PREDICTED INTENT: Payment card / Application
+TOTAL SAMPLES: 1
+================================================================================
+
+--------------------------------------------------------------------------------
+Sample ID: RS-12
+Predicted Sub-intent: Card application or cancellation
+Masked Customer Conversation (Chinese):
+我就沒有要用這張卡片 ⏎ 我根本還沒申請啊 ⏎ 那如果申請不同意 他會取消掉嗎
+English Translation:
+I don’t intend to use this card, and I haven’t actually applied yet. If the application isn’t approved, will it be cancelled?
+Decisive Evidence:
+The active issue concerns a card application and cancellation, which the current five intents do not cover.
+--------------------------------------------------------------------------------

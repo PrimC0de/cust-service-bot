@@ -1,0 +1,26 @@
+================================================================================
+PREDICTED INTENT: Withdrawal / Payout
+TOTAL SAMPLES: 2
+================================================================================
+
+--------------------------------------------------------------------------------
+Sample ID: RS-07
+Predicted Sub-intent: Bonus withdrawal limit
+Masked Customer Conversation (Chinese):
+優惠金有限制提領多少嗎？
+English Translation:
+Is there a limit on how much promotional credit can be withdrawn?
+Decisive Evidence:
+The requested action concerns withdrawal limits, which are outside the current five intents.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: RS-23
+Predicted Sub-intent: Withdrawal pending / not received
+Masked Customer Conversation (Chinese):
+我剛有提款等很久還沒到帳
+English Translation:
+I made a withdrawal just now, but it has been pending for a long time and still has not arrived.
+Decisive Evidence:
+The customer explicitly reports a withdrawal that has not arrived.
+--------------------------------------------------------------------------------

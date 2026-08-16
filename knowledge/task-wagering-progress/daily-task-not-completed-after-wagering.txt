@@ -1,0 +1,23 @@
+Daily Task Not Completed After Wagering
+
+Daily tasks require specific actions to be recognized by the system. If you completed sports bets but the task still shows incomplete:
+
+Common causes:
+1. Bets placed outside the daily task entry point — you must enter sports betting THROUGH the daily task banner/link for the task to track wagers.
+2. Minimum bet amount not met — each task specifies a minimum wager per bet (e.g. 500 per bet).
+3. Bet type not eligible — some tasks require specific bet types (e.g. pre-match only, minimum odds 1.5).
+4. Settlement delay — bets must be settled (won or lost) before counting toward task progress.
+5. Task period expired — daily tasks reset at 00:00 platform time.
+
+Correct procedure for sports wagering tasks:
+1. Go to Promotions > Daily Tasks.
+2. Tap the specific sports betting task (do NOT navigate to sports separately).
+3. Place the required number of bets at the required amount through the task-linked page.
+4. Wait for bet settlement — progress updates within 5–15 minutes after settlement.
+
+If you placed two successful 500 bets via the task entry but progress is stuck, contact customer service with:
+- Task name and date
+- Bet slip IDs or screenshots
+- Time bets were placed
+
+Support can manually verify and credit task completion if system tracking failed.

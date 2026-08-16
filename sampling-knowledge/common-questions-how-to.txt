@@ -1,0 +1,48 @@
+================================================================================
+PREDICTED INTENT: Common Questions / How-to
+TOTAL SAMPLES: 4
+================================================================================
+
+--------------------------------------------------------------------------------
+Sample ID: RS-05
+Predicted Sub-intent: Rules / terms / policy
+Masked Customer Conversation (Chinese):
+我今天存了一萬，需要多少流水？
+English Translation:
+I deposited 10,000 today. How much turnover is required?
+Decisive Evidence:
+Asks about the turnover requirement, which is a platform rule rather than a deposit-processing issue.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: RS-10
+Predicted Sub-intent: Customer-service hours / contact methods
+Masked Customer Conversation (Chinese):
+你們客服帳號是哪個？
+English Translation:
+Which account is your customer-service account?
+Decisive Evidence:
+Asks for the official customer-service contact account.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: RS-16
+Predicted Sub-intent: Rules / terms / policy
+Masked Customer Conversation (Chinese):
+保險賠付是甚麼意思
+English Translation:
+What does an insurance payout mean?
+Decisive Evidence:
+Asks for the meaning of a platform or game rule term.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: RS-19
+Predicted Sub-intent: Platform navigation / feature location
+Masked Customer Conversation (Chinese):
+請問，我要下載app手機版的，網頁的連結不能下載呢
+English Translation:
+I want to download the mobile app, but the website link does not work. What should I do?
+Decisive Evidence:
+The user needs help locating or accessing the mobile-app download function.
+--------------------------------------------------------------------------------

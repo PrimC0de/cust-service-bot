@@ -1,0 +1,28 @@
+Rules, Terms, and Policy
+
+Platform rules and turnover (流水) requirements:
+
+Turnover / wagering requirement:
+- Deposited funds typically require 1x turnover before withdrawal ( wager total equal to deposit amount)
+- Promotional bonus credit requires higher turnover (1x–15x depending on promotion)
+- Turnover = total valid bet amount, regardless of win or loss
+- Example: deposit 10,000 with 1x turnover requirement → you must place 10,000 in total valid bets before withdrawing
+
+To check your current turnover progress:
+1. Go to Wallet > Turnover Status
+2. View "Required" vs "Completed" amounts
+3. Remaining turnover must reach zero before withdrawal of associated funds
+
+Insurance payout (保險赔付):
+- A feature in certain games that returns a portion of losses under specific conditions
+- Not actual insurance — it is a platform rebate mechanism
+- Terms vary by game; check the game rules page for eligibility and payout percentage
+- Insurance payout credit may have its own turnover requirement
+
+General terms:
+- One account per person
+- Minimum age 18
+- All bets are final once confirmed
+- Platform reserves the right to void bets in case of obvious errors or system malfunctions
+
+Full terms available under Help Center > Terms of Service.

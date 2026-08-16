@@ -1,0 +1,18 @@
+Account Closure and Other Account Requests
+
+Account closure (注销) is available upon request for members with zero pending balance and no active promotions.
+
+To request account closure:
+1. Withdraw all remaining balance.
+2. Cancel or complete any active promotions.
+3. Contact customer service with your member ID and closure request.
+4. Confirm identity via SMS verification.
+5. Account is closed within 3 business days after confirmation.
+
+Once closed, the account cannot be reopened. A new registration would require new identity verification.
+
+Other account requests not covered by specific categories (e.g. general account inquiries, data export requests) should be directed to customer service with a clear description of your need.
+
+LINE binding issues: go to Account Settings > LINE Binding to link or unlink. If LINE login fails, try password login and rebind LINE from settings.
+
+For any account question without a clear category, customer service will route your request to the appropriate team within 24 hours.

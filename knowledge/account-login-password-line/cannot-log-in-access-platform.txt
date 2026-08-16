@@ -1,0 +1,15 @@
+Cannot Log In or Access Platform
+
+If you cannot open or log in to the platform, try these steps:
+
+1. Clear browser cache or restart the app.
+2. Check your internet connection and try a different network.
+3. Ensure you are using the correct registered phone number or username.
+4. If you see "IP blocked" or "login restricted," your IP may be flagged. Switch to mobile data or contact customer service to review the restriction.
+5. Wait 15 minutes if you exceeded login attempt limits.
+
+If the platform cannot be opened directly after a deposit, your account may be under temporary review. Deposited funds are not lost — they remain in your account once access is restored. Contact customer service with your member ID and deposit receipt for priority assistance.
+
+Maintenance windows are announced on the login page. During maintenance, access is temporarily unavailable.
+
+For persistent login failures, provide your registered phone number and approximate last successful login time to customer service for account verification.

@@ -1,0 +1,15 @@
+Named Campaigns and Red Packet Promotions
+
+The platform runs seasonal campaigns including returning-member offers, red packet events, and named deposit bonuses.
+
+Returning-member promotion example: deposit 1,000 and receive 500 bonus credit. Eligibility requires:
+- Account registered before the campaign start date
+- No login activity for at least 30 days prior to the campaign
+- Minimum single deposit of 1,000 during the campaign period
+- One claim per member per campaign
+
+Red packet campaigns are announced on the Promotions page and via in-app notifications. To participate, tap the campaign banner and follow the deposit or wagering requirements listed.
+
+Campaign terms vary by event. Always read the full rules on the promotion detail page before participating. Bonus credit from campaigns is subject to turnover requirements before withdrawal.
+
+If a campaign shows as expired, it cannot be reactivated. Check current active promotions under Promotions > Active Events.

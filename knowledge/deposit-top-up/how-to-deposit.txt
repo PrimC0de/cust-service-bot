@@ -1,0 +1,25 @@
+How to Deposit
+
+Available deposit methods:
+1. Bank transfer (網銀轉帳)
+2. ATM payment / ATM繳費
+3. Convenience-store payment (超商儲值)
+4. USDT (crypto)
+
+General steps for bank transfer:
+1. Log in and go to Wallet > Deposit.
+2. Select your preferred method.
+3. Enter the deposit amount and confirm.
+4. Follow the on-screen instructions to complete payment.
+5. Funds are credited after the system matches your payment.
+
+ATM payment (when bank transfer limit is reached):
+1. Go to Wallet > Deposit > ATM Payment.
+2. Select the bill payment option and note the payment code.
+3. Visit an ATM or convenience store that supports bill payment.
+4. Enter the code and pay the exact amount shown.
+5. Keep your receipt until the deposit is credited.
+
+If you have reached your daily bank transfer limit, ATM payment and convenience-store deposit are alternative options that do not use your bank transfer quota.
+
+Contact customer service only if payment was completed but not credited after the expected processing time.

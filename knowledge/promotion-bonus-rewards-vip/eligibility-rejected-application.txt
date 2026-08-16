@@ -1,0 +1,17 @@
+Promotion Eligibility and Rejected Applications
+
+If your promotion or bonus application shows as failed, common reasons include:
+- Accidental tap before meeting eligibility requirements (e.g. first deposit not yet completed)
+- Already claimed the same promotion within the eligibility period
+- Account not fully verified
+- Promotion quota exhausted for the day
+
+For first-deposit promotions: you must complete your first successful deposit before applying. If you tapped apply before depositing, the application will fail. After your first deposit clears, you may re-apply if the promotion is still active.
+
+To resolve a failed application:
+1. Check the promotion rules on the Promotions page.
+2. Confirm your deposit has been credited.
+3. Wait 10 minutes and try applying again if eligible.
+4. Contact customer service with your member ID and the promotion name if the issue persists.
+
+Rejected applications do not affect your account status. You remain eligible for other active promotions that match your account profile.

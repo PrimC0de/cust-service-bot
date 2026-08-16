@@ -1,0 +1,177 @@
+{
+  "categories": [
+    {
+      "slug": "promotion-bonus-rewards-vip",
+      "name": "Promotion / Bonus / Rewards / VIP",
+      "sub_intents": [
+        {
+          "slug": "birthday-reward",
+          "name": "Birthday reward",
+          "classification_hint": "User asks how to apply for or claim birthday bonus/reward, or asks what birthday promotions are available."
+        },
+        {
+          "slug": "red-packet-named-campaign",
+          "name": "Red packet / named campaign",
+          "classification_hint": "User asks about a specific named promotion, returning-member campaign, red packet, or deposit bonus offer (e.g. deposit 1000 get 500)."
+        },
+        {
+          "slug": "eligibility-rejected-application",
+          "name": "Eligibility / rejected application",
+          "classification_hint": "User reports a failed or rejected promotion/bonus application, or asks why they are not eligible."
+        }
+      ]
+    },
+    {
+      "slug": "payment-card-application",
+      "name": "Payment Card / Application",
+      "sub_intents": [
+        {
+          "slug": "card-application-or-cancellation",
+          "name": "Card application or cancellation",
+          "classification_hint": "User asks about applying for, cancelling, or declining a payment card, or what happens if an application is not approved."
+        }
+      ]
+    },
+    {
+      "slug": "account-login-password-line",
+      "name": "Account / Login / Password / LINE Binding",
+      "sub_intents": [
+        {
+          "slug": "cannot-log-in-access-platform",
+          "name": "Cannot log in / access platform",
+          "classification_hint": "User cannot open, log in, or access the platform; includes IP blocks and login errors."
+        },
+        {
+          "slug": "duplicate-multiple-accounts",
+          "name": "Duplicate / multiple accounts",
+          "classification_hint": "User discusses having multiple accounts, household members with separate accounts, or duplicate account issues."
+        },
+        {
+          "slug": "forgot-password",
+          "name": "Forgot password",
+          "classification_hint": "User asks how to view, recover, or reset their password."
+        },
+        {
+          "slug": "change-phone-name-profile",
+          "name": "Change phone / name / profile",
+          "classification_hint": "User wants to update profile info, rebind account, change bank account details, phone number, or name."
+        },
+        {
+          "slug": "account-locked-suspended-disabled",
+          "name": "Account locked / suspended / disabled",
+          "classification_hint": "User reports account closed, blacklisted, suspended, locked, or disabled by the platform."
+        },
+        {
+          "slug": "unclassified-within-account",
+          "name": "Unclassified within account",
+          "classification_hint": "Account-related question that does not fit other sub-intents, such as account closure requests."
+        }
+      ]
+    },
+    {
+      "slug": "mixed-transaction-status",
+      "name": "Mixed Transaction Status",
+      "sub_intents": [
+        {
+          "slug": "withdrawal-and-deposit-service-availability",
+          "name": "Withdrawal and deposit service availability",
+          "classification_hint": "User asks whether deposit and/or withdrawal services are working normally right now, without a specific failed transaction."
+        }
+      ]
+    },
+    {
+      "slug": "deposit-top-up",
+      "name": "Deposit / Top-up",
+      "sub_intents": [
+        {
+          "slug": "how-to-deposit",
+          "name": "How to deposit",
+          "classification_hint": "User asks how to use a deposit method (ATM payment, bank transfer steps, where to click)."
+        },
+        {
+          "slug": "usdt-deposit-guidance",
+          "name": "USDT deposit guidance",
+          "classification_hint": "User asks for USDT/crypto deposit instructions or tutorial."
+        },
+        {
+          "slug": "deposit-methods-limits-fees",
+          "name": "Deposit methods / limits / fees",
+          "classification_hint": "User asks about deposit amount limits, minimums, fees, or why a specific amount is required."
+        },
+        {
+          "slug": "proof-submitted-manual-posting",
+          "name": "Proof submitted / manual posting",
+          "classification_hint": "User asks whether they must contact support or submit proof for each deposit to be credited."
+        },
+        {
+          "slug": "funds-not-credited",
+          "name": "Funds not credited",
+          "classification_hint": "User reports deposited funds have not been credited to their account yet."
+        },
+        {
+          "slug": "incorrect-amount-payment-details",
+          "name": "Incorrect amount / payment details",
+          "classification_hint": "Transferred amount does not match the amount entered on the deposit form."
+        },
+        {
+          "slug": "convenience-store-deposit",
+          "name": "Convenience-store deposit",
+          "classification_hint": "Issue with convenience-store (超商) payment: lost receipt, tracing payment, store location."
+        },
+        {
+          "slug": "unclassified-within-deposit",
+          "name": "Unclassified within deposit",
+          "classification_hint": "General deposit question that does not clearly fit other sub-intents, such as deposit timing or method confusion."
+        }
+      ]
+    },
+    {
+      "slug": "task-wagering-progress",
+      "name": "Task / Wagering Progress",
+      "sub_intents": [
+        {
+          "slug": "daily-task-not-completed-after-wagering",
+          "name": "Daily task not completed after wagering",
+          "classification_hint": "User completed wagering/bets but daily task still shows incomplete."
+        }
+      ]
+    },
+    {
+      "slug": "withdrawal-payout",
+      "name": "Withdrawal / Payout",
+      "sub_intents": [
+        {
+          "slug": "bonus-withdrawal-limit",
+          "name": "Bonus withdrawal limit",
+          "classification_hint": "User asks about limits on withdrawing promotional/bonus credit."
+        },
+        {
+          "slug": "withdrawal-pending-not-received",
+          "name": "Withdrawal pending / not received",
+          "classification_hint": "User reports a withdrawal that is pending too long or has not arrived in their bank account."
+        }
+      ]
+    },
+    {
+      "slug": "common-questions-how-to",
+      "name": "Common Questions / How-to",
+      "sub_intents": [
+        {
+          "slug": "rules-terms-policy",
+          "name": "Rules / terms / policy",
+          "classification_hint": "User asks about platform rules, turnover/wagering requirements, terms, or meaning of policy terms."
+        },
+        {
+          "slug": "customer-service-hours-contact-methods",
+          "name": "Customer-service hours / contact methods",
+          "classification_hint": "User asks for customer service contact info, hours, or official support account."
+        },
+        {
+          "slug": "platform-navigation-feature-location",
+          "name": "Platform navigation / feature location",
+          "classification_hint": "User needs help finding a feature, downloading the app, or navigating the platform."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+Funds Not Credited
+
+If your deposit has not been credited (上分):
+
+Expected processing times:
+- Bank transfer: 5–30 minutes
+- ATM / convenience-store: 10–60 minutes
+- USDT: 10–30 minutes after network confirmations
+
+If your deposit is still not credited after the expected time:
+
+1. Check Wallet > Deposit History for the order status (Pending / Processing / Failed).
+2. Verify you paid the exact amount shown on the deposit form.
+3. Confirm you used the correct account number, payment code, or USDT address.
+4. For bank transfers, ensure the transfer was made AFTER generating the deposit order.
+
+If status shows Pending beyond 60 minutes:
+- Submit proof via Wallet > Deposit History > Submit Proof
+- Or contact customer service with: member ID, deposit amount, payment time, and receipt screenshot
+
+Common reasons for delay:
+- Amount mismatch between form and actual transfer
+- Transfer made without generating a deposit order first
+- Payment outside business hours for manual-review methods
+- Bank processing delay during peak hours
+
+Funds are not lost — unmatched deposits are held for manual matching once proof is provided.

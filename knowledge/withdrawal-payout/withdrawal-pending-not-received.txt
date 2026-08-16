@@ -1,0 +1,30 @@
+Withdrawal Pending or Not Received
+
+Normal withdrawal processing times:
+- Standard: 30 minutes to 2 hours
+- Peak periods: up to 4 hours
+- First withdrawal or large amount: up to 24 hours for security review
+
+If your withdrawal has been pending for a long time:
+
+1. Check Wallet > Withdrawal History for status (Pending / Processing / Completed / Rejected).
+2. Verify your bank account details are correct under Account Settings.
+3. Confirm you have completed any required turnover for bonus-related withdrawals.
+4. Check if your bank is under maintenance (some banks pause incoming transfers overnight).
+
+Status meanings:
+- Pending: in queue, will process shortly
+- Processing: sent to bank, awaiting bank confirmation
+- Completed: funds sent — check your bank account (may take additional 15–30 min to appear)
+- Rejected: see rejection reason; funds returned to your platform balance
+
+If pending beyond 4 hours:
+Contact customer service with withdrawal order number, amount, and registered bank account last 4 digits.
+
+Common delays:
+- Bank maintenance window (23:00–07:00 for some banks)
+- Name mismatch between platform account and bank account
+- Daily withdrawal limit reached (resets at 00:00)
+- Security review for first large withdrawal
+
+Your funds are safe during pending status — they are not lost.

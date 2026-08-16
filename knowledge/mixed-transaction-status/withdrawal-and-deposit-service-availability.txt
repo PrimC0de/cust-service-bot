@@ -1,0 +1,21 @@
+Deposit and Withdrawal Service Availability
+
+To check whether deposit and withdrawal services are operating normally:
+
+1. Visit the platform homepage or login page — any service disruption is announced via banner notification.
+2. Check the Service Status section under Help Center for real-time updates on:
+   - Bank transfer deposits
+   - Convenience-store (超商) deposits
+   - USDT deposits
+   - ATM payment deposits
+   - Withdrawals to bank accounts
+
+Normal processing times when services are available:
+- Bank transfer deposit: 5–30 minutes
+- Convenience-store deposit: 10–60 minutes
+- USDT deposit: 10–30 minutes after network confirmations
+- Withdrawal: 30 minutes to 4 hours depending on bank
+
+If both deposit and withdrawal seem slow, there may be scheduled maintenance or high transaction volume. Maintenance is typically announced in advance and lasts 30 minutes to 2 hours.
+
+For combined status questions ("are withdrawals and store deposits both working?"), check the Service Status page or ask customer service for the latest update.

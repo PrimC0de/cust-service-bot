@@ -1,0 +1,29 @@
+Deposit Methods, Limits, and Fees
+
+Deposit method limits and requirements:
+
+Bank transfer (網銀):
+- Minimum: 1,000 per transaction
+- Some channels require 5,000 minimum for first-time or specific bank routes — this is set by the payment processor, not arbitrary
+- Maximum: 200,000 per transaction
+- Daily limit: 500,000
+- Fee: free (platform absorbs processing cost)
+
+ATM payment:
+- Minimum: 500
+- Maximum: 30,000 per transaction
+- Fee: free
+
+Convenience-store (超商):
+- Minimum: 1,000
+- Maximum: 20,000 per transaction
+- Fee: 25–35 depending on store chain
+
+USDT:
+- Minimum: 10 USDT
+- Maximum: no platform cap
+- Network fee paid by sender
+
+If online banking requires a 5,000 minimum, it means that specific payment route has a processor minimum. Try ATM payment or convenience-store deposit for smaller amounts, or deposit 5,000 or more via bank transfer.
+
+Limits may vary by VIP level. Check Wallet > Deposit for your current applicable limits.

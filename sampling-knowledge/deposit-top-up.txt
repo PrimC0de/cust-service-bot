@@ -1,0 +1,103 @@
+================================================================================
+PREDICTED INTENT: Deposit / Top-up
+TOTAL SAMPLES: 9
+================================================================================
+
+--------------------------------------------------------------------------------
+Sample ID: RS-01
+Predicted Sub-intent: How to deposit
+Masked Customer Conversation (Chinese):
+有一個ATM繳費，那個入金功能怎麼用？我限額了，不能轉帳。
+English Translation:
+There is an ATM payment option. How do I use that deposit function? I’ve reached my transfer limit and can’t make a bank transfer.
+Decisive Evidence:
+Asks how to use an available deposit method.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: RS-02
+Predicted Sub-intent: USDT deposit guidance
+Masked Customer Conversation (Chinese):
+USDT入金教學
+English Translation:
+How do I deposit using USDT?
+Decisive Evidence:
+Explicitly asks for USDT deposit instructions.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: RS-04
+Predicted Sub-intent: Deposit methods, limits, and fees
+Masked Customer Conversation (Chinese):
+為什麼網銀要轉五千？
+English Translation:
+Why does the online-bank transfer have to be 5,000?
+Decisive Evidence:
+Questions a required deposit amount or limit for online banking.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: RS-17
+Predicted Sub-intent: Proof submitted / manual posting
+Masked Customer Conversation (Chinese):
+請問每次儲值都要跟你們說才會入帳嗎？
+English Translation:
+Do I need to contact you every time I make a deposit before it will be credited?
+Decisive Evidence:
+Asks whether every deposit requires manual customer-service action before posting.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: RS-20
+Predicted Sub-intent: Funds not credited
+Masked Customer Conversation (Chinese):
+為什麼還沒有上分？
+English Translation:
+Why hasn’t my deposit been credited yet?
+Decisive Evidence:
+Directly reports that deposited funds have not been credited.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: RS-22
+Predicted Sub-intent: Unclassified within deposit
+Masked Customer Conversation (Chinese):
+可以問一下嗎 ⏎ 銀行轉帳是要綁定的超商嗎 ⏎ ？
+English Translation:
+May I ask: does a bank transfer need to be linked to a convenience store?
+Decisive Evidence:
+The message concerns a deposit method but does not clearly identify whether the user needs bank-transfer or convenience-store instructions.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: RS-25
+Predicted Sub-intent: Incorrect amount / payment details
+Masked Customer Conversation (Chinese):
+我是轉2萬5 可是我上面按2萬 多按了5千
+English Translation:
+I transferred 25,000, but I selected 20,000 on the form, so there is an extra 5,000.
+Decisive Evidence:
+The transferred amount does not match the amount entered on the deposit form.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: RS-28
+Predicted Sub-intent: Convenience-store deposit
+Masked Customer Conversation (Chinese):
+我繳費的明細遺失 ⏎ 但是我有身分證證明 ⏎ 我也忘了我是在那個門市繳費 ⏎ 不能查詢那個門市嗎
+English Translation:
+I lost the payment receipt, but I have identity documentation. I also forgot which store I paid at. Can you check which store it was?
+Decisive Evidence:
+The issue concerns tracing a convenience-store payment when the receipt and store location are unavailable.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: RS-30
+Predicted Sub-intent: Unclassified within deposit
+Masked Customer Conversation (Chinese):
+現在入金會等很久嗎
+English Translation:
+Will a deposit take a long time right now?
+Decisive Evidence:
+The user asks generally about deposit timing without confirming a completed, failed, or uncredited transaction.
+--------------------------------------------------------------------------------

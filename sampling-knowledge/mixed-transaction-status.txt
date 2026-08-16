@@ -1,0 +1,15 @@
+================================================================================
+PREDICTED INTENT: Mixed transaction status
+TOTAL SAMPLES: 1
+================================================================================
+
+--------------------------------------------------------------------------------
+Sample ID: RS-13
+Predicted Sub-intent: Withdrawal and deposit service availability
+Masked Customer Conversation (Chinese):
+取款跟商店儲值都正常？
+English Translation:
+Are withdrawals and convenience-store deposits both working normally?
+Decisive Evidence:
+The message combines withdrawal and deposit availability and lacks a single decisive requested action.
+--------------------------------------------------------------------------------

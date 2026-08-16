@@ -1,0 +1,16 @@
+Payment Card Application and Cancellation
+
+The platform payment card is optional. You are not required to apply for or use the card to deposit, play, or withdraw.
+
+If you have not submitted a card application, no card will be issued. If you see a card-related notification but did not apply, it may be a system prompt — you can dismiss it without action.
+
+Application process:
+1. Go to Account > Payment Card.
+2. Review terms and submit application with required identity verification.
+3. Approval typically takes 1–3 business days.
+
+If your application is not approved, it is automatically cancelled — no card is issued and no fees apply. You may re-apply after 30 days if your account meets updated eligibility criteria.
+
+To cancel a pending application before approval, go to Account > Payment Card > Cancel Application.
+
+If you do not intend to use the card, simply do not complete the application. An unapproved or cancelled application has no impact on your account balance or other services.

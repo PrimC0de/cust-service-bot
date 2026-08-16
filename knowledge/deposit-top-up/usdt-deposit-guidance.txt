@@ -1,0 +1,24 @@
+USDT Deposit Guidance
+
+To deposit using USDT:
+
+1. Log in and go to Wallet > Deposit > USDT.
+2. Select the network (TRC20 recommended for lower fees; ERC20 also supported).
+3. Copy the deposit address shown — do NOT use an address from a previous deposit.
+4. Send USDT from your external wallet to the copied address.
+5. Wait for network confirmations (TRC20: ~1–5 minutes; ERC20: ~5–15 minutes).
+6. Funds are credited automatically after confirmations.
+
+Important warnings:
+- Send only USDT on the selected network. Sending other tokens or wrong network may result in permanent loss.
+- Minimum deposit: 10 USDT. Amounts below minimum may not be credited.
+- The deposit address may change periodically. Always copy a fresh address from the deposit page.
+- Do not send from an exchange that does not support memo/tag if required.
+
+If your USDT deposit is not credited after 30 minutes and sufficient confirmations, contact customer service with:
+- Transaction hash (TXID)
+- Network used
+- Amount sent
+- Screenshot of the transfer
+
+USDT deposits are available 24/7 unless announced otherwise on the Service Status page.

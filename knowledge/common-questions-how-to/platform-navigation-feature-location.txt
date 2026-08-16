@@ -1,0 +1,29 @@
+Platform Navigation and Feature Location
+
+Finding features on the platform:
+
+Mobile app download:
+1. Go to the official website on your phone browser.
+2. Tap the "Download App" banner at the top, OR go to Help Center > App Download.
+3. Select iOS or Android.
+4. iOS: follow the installation profile instructions (Settings > General > VPN & Device Management to trust).
+5. Android: allow installation from unknown sources if prompted, then install the APK.
+
+If the website download link does not work:
+- Try a different browser (Chrome recommended)
+- Clear browser cache and retry
+- Use the alternative download link on Help Center > App Download > Mirror Link
+- Contact customer service for a direct download link via chat
+
+Common feature locations:
+- Deposit: Wallet > Deposit
+- Withdraw: Wallet > Withdraw
+- Promotions: Promotions tab
+- Daily tasks: Promotions > Daily Tasks
+- Bet history: Account > History
+- Bank account settings: Account Settings > Bank Account
+- Password change: Account Settings > Security
+
+Desktop users: all features are available on the website — no app required. The mobile app provides the same functionality with push notifications.
+
+For any feature you cannot find, use the search bar on the homepage or ask live chat for step-by-step guidance.

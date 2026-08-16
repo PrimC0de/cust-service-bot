@@ -1,0 +1,19 @@
+Incorrect Amount or Payment Details
+
+If the amount you transferred does not match the amount entered on the deposit form (e.g. transferred 25,000 but selected 20,000 on the form):
+
+1. Do NOT submit a new deposit order for the difference yet.
+2. Go to Wallet > Deposit History and locate the original order.
+3. Tap "Report Amount Mismatch" or contact customer service with:
+   - Original deposit order number
+   - Amount shown on the form
+   - Actual amount transferred
+   - Bank transfer receipt or payment proof
+
+The excess amount (e.g. extra 5,000) will be manually matched and credited to your account after verification. This typically takes 10–30 minutes during business hours.
+
+If you transferred LESS than the form amount, the deposit may fail auto-matching. Submit proof and the credited amount will reflect what was actually received.
+
+Always double-check the amount on the deposit form before completing payment. Generate a new deposit order if you need to change the amount — do not transfer a different amount against an existing order.
+
+For repeated mismatches, customer service may advise using convenience-store or ATM payment where the exact amount is entered at the payment terminal.

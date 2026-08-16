@@ -1,0 +1,21 @@
+Convenience-Store Deposit Issues
+
+Convenience-store (超商) deposit procedure:
+1. Go to Wallet > Deposit > Convenience Store.
+2. Select store chain (7-Eleven, FamilyMart, etc.) and enter amount.
+3. Receive a payment code and barcode.
+4. Visit the store, scan barcode, and pay at the counter.
+5. Keep the printed receipt until credited.
+
+Lost receipt / forgot which store:
+If you lost the payment receipt but have ID documentation:
+1. Contact customer service with your member ID, approximate payment date/time, and payment amount.
+2. Provide a photo of your ID for verification.
+3. Support can trace the payment through the store chain's settlement system using your member ID and payment timestamp.
+4. Processing takes 1–4 hours depending on store chain confirmation.
+
+We cannot look up the store location without a receipt or approximate time, but settlement records can match payments by member ID and amount within 24 hours of payment.
+
+If payment was made but not credited and you have no receipt, submit whatever proof you have (bank notification, store SMS) via Wallet > Deposit History > Submit Proof.
+
+Store payment tracing is available during business hours 09:00–02:00.
