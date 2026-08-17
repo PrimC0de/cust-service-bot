@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
+data/indexes/index.faiss
+data/indexes/chunks.json
+data/indexes/manifest.json
+# Legacy generated artifacts may still exist in old working copies.
 index.faiss
 chunks.json
 .DS_Store
