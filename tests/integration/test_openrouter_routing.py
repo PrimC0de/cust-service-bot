@@ -15,11 +15,15 @@ class OpenRouterRoutingTests(unittest.TestCase):
         clients = ClientRegistry(settings)
         profile_clients = [clients.for_profile(profile) for profile in profiles.values()]
 
+        self.assertEqual(set(profiles), {"openrouter", "kimi"})
+        self.assertEqual(profiles["openrouter"].reformulate_model, "openai/gpt-5-nano")
+        self.assertEqual(profiles["openrouter"].compose_model, "openai/gpt-5-nano")
+        self.assertEqual(profiles["openrouter"].backup_profile, "kimi")
         self.assertTrue(all(client is profile_clients[0] for client in profile_clients))
         self.assertIs(clients.embeddings(), profile_clients[0])
         self.assertTrue(
             all(
-                model.startswith(("moonshotai/", "openai/", "google/"))
+                model.startswith(("moonshotai/", "openai/"))
                 for profile in profiles.values()
                 for model in (profile.reformulate_model, profile.compose_model)
             )

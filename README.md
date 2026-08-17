@@ -19,11 +19,10 @@ Set the Telegram token, admin IDs, and `OPENROUTER_API_KEY` in `.env`. OpenRoute
 
 ## Model profiles
 
-`ACTIVE_MODEL_PROFILE` accepts one of three preconfigured names:
+`ACTIVE_MODEL_PROFILE` accepts one of two preconfigured names:
 
-- `openrouter`: Gemini 2.5 Flash Lite reformulation and composition through OpenRouter, with GPT-5.6 Luna failover.
-- `kimi`: optional Kimi K2.6/K3 reformulation and composition through OpenRouter.
-- `reranking-reformulation`: GPT-5.6 Luna reformulation and composition through OpenRouter. The existing name is retained for command compatibility.
+- `openrouter`: OpenAI GPT-5 Nano reformulation and composition through OpenRouter, with the `kimi` profile as failover.
+- `kimi`: optional Kimi K2.6/K3 reformulation and composition through OpenRouter, with the `openrouter` profile as failover.
 
 All profiles use only the OpenRouter endpoint and key. Model names and routing behavior are fixed in code. Telegram users listed in `TELEGRAM_ADMIN_IDS` may inspect or switch the live profile with `/model` and `/model <profile>`. A batch keeps the profile selected when its debounce completes.
 
