@@ -97,6 +97,7 @@ class RetrievalHit:
 class ReformulationResult:
     query: str
     clarification: str
+    answer: str | None = None
 
 
 @dataclass(frozen=True)

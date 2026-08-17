@@ -51,27 +51,18 @@ class RAGPipeline:
                 clarification_already_used=unresolved is not None,
             )
 
+        weak_query = current
         if unresolved is not None:
-            combined = (
+            weak_query = (
                 f"Unresolved question: {unresolved.reformulated_query}\n\n"
                 f"User clarification: {current}"
             )
-            recovered = await self.retriever.search(combined, self.top_k, batch_id=batch_id)
-            if self._strong(recovered):
-                return await self._compose_reply(
-                    profile,
-                    current,
-                    history,
-                    recovered,
-                    retrieval_query=combined,
-                    batch_id=batch_id,
-                    clarification_already_used=True,
-                )
-            return PipelineReply(insufficient_response(current), "insufficient")
 
         reformulated = await self._reformulate(
-            profile, current, current, history, batch_id=batch_id
+            profile, current, weak_query, history, batch_id=batch_id
         )
+        if reformulated.answer:
+            return PipelineReply(reformulated.answer, "answer")
         recovered = await self.retriever.search(
             reformulated.query, self.top_k, batch_id=batch_id
         )
@@ -83,9 +74,11 @@ class RAGPipeline:
                 recovered,
                 retrieval_query=reformulated.query,
                 batch_id=batch_id,
-                clarification_already_used=False,
+                clarification_already_used=unresolved is not None,
             )
 
+        if unresolved is not None:
+            return PipelineReply(insufficient_response(current), "insufficient")
         pending = UnresolvedClarification(
             current, reformulated.query, reformulated.clarification
         )

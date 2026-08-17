@@ -44,6 +44,9 @@ class GenerationService:
             stage="reformulate",
             max_tokens=200,
         )
+        answer = data.get("answer")
+        if isinstance(answer, str) and answer.strip():
+            return ReformulationResult("", "", answer.strip()[:4000])
         rewritten = data.get("query")
         clarification = data.get("clarification")
         if not isinstance(rewritten, str) or not rewritten.strip():

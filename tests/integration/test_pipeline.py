@@ -10,6 +10,7 @@ from app.models import (
     UnresolvedClarification,
 )
 from app.providers.router import ProviderFailure
+from app.rag.generation import GenerationService
 from app.rag.pipeline import RAGPipeline
 
 
@@ -33,23 +34,42 @@ class FakeRetriever:
 
 
 class FakeGeneration:
-    def __init__(self, composition=None, fail_compose=None, fail_reformulate=None):
+    def __init__(
+        self,
+        composition=None,
+        fail_compose=None,
+        fail_reformulate=None,
+        reformulation=None,
+    ):
         self.composition = list(composition or [CompositionResult("answer", "grounded")])
         self.fail_compose = fail_compose
         self.fail_reformulate = fail_reformulate
+        self.reformulation = reformulation or ReformulationResult(
+            "rewritten query", "What do you mean?"
+        )
         self.calls = []
 
     async def reformulate(self, profile, current, query, history, *, batch_id):
         self.calls.append(("reformulate", profile.name))
         if profile.name == self.fail_reformulate:
             raise ProviderFailure("failed")
-        return ReformulationResult("rewritten query", "What do you mean?")
+        return self.reformulation
 
     async def compose(self, profile, current, history, hits, *, batch_id):
         self.calls.append(("compose", profile.name))
         if profile.name == self.fail_compose:
             raise ProviderFailure("failed")
         return self.composition.pop(0)
+
+
+class FakeRouter:
+    def __init__(self, response):
+        self.response = response
+        self.messages = None
+
+    async def json(self, _profile, _model, messages, **_kwargs):
+        self.messages = messages
+        return self.response
 
 
 class PipelineTests(unittest.IsolatedAsyncioTestCase):
@@ -79,6 +99,22 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(retriever.queries, ["two days", "rewritten query"])
         self.assertEqual(generation.calls, [("reformulate", "kimi"), ("compose", "kimi")])
 
+    async def test_weak_retrieval_can_answer_from_explicit_user_history(self):
+        retriever = FakeRetriever([WEAK])
+        generation = FakeGeneration(
+            reformulation=ReformulationResult("", "", "Your name is Alan.")
+        )
+        reply = await self.pipeline(retriever, generation).run(
+            "What is my name?",
+            (ConversationExchange("My name is Alan.", "Nice to meet you."),),
+            PRIMARY,
+            batch_id="b-context",
+        )
+        self.assertEqual(reply.text, "Your name is Alan.")
+        self.assertEqual(reply.kind, "answer")
+        self.assertEqual(retriever.queries, ["What is my name?"])
+        self.assertEqual(generation.calls, [("reformulate", "kimi")])
+
     async def test_second_weak_result_asks_one_clarification(self):
         reply = await self.pipeline(FakeRetriever([WEAK, WEAK]), FakeGeneration()).run(
             "two days", (), PRIMARY, batch_id="b3"
@@ -95,8 +131,8 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
         )
         self.assertEqual(reply.kind, "answer")
         self.assertEqual(retriever.queries[0], "withdrawal")
-        self.assertIn("withdrawal duration", retriever.queries[1])
-        self.assertNotIn(("reformulate", "kimi"), generation.calls)
+        self.assertEqual(retriever.queries[1], "rewritten query")
+        self.assertIn(("reformulate", "kimi"), generation.calls)
 
     async def test_pending_clarification_stops_after_final_weak_result(self):
         pending = UnresolvedClarification("two days", "withdrawal duration", "For what?")
@@ -144,3 +180,32 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
             generation.calls,
             [("reformulate", "kimi"), ("reformulate", "backup"), ("compose", "kimi")],
         )
+
+
+class GenerationTests(unittest.IsolatedAsyncioTestCase):
+    async def test_reformulation_accepts_answer_from_explicit_user_history(self):
+        router = FakeRouter(
+            {"answer": "Your name is Alan.", "query": "", "clarification": ""}
+        )
+        result = await GenerationService(router).reformulate(
+            PRIMARY,
+            "What is my name?",
+            "What is my name?",
+            (ConversationExchange("My name is Alan.", "Nice to meet you."),),
+            batch_id="b-generation-context",
+        )
+        self.assertEqual(result.answer, "Your name is Alan.")
+        self.assertIn("User: My name is Alan.", router.messages[1]["content"])
+
+    async def test_composer_receives_separate_conversation_and_kb_evidence(self):
+        router = FakeRouter({"kind": "answer", "text": "Your name is Alan."})
+        result = await GenerationService(router).compose(
+            PRIMARY,
+            "What is my name?",
+            (ConversationExchange("My name is Alan.", "Nice to meet you."),),
+            STRONG,
+            batch_id="b-generation-compose",
+        )
+        self.assertEqual(result.text, "Your name is Alan.")
+        self.assertIn("Facts explicitly stated by the user", router.messages[0]["content"])
+        self.assertIn("Knowledge chunks:", router.messages[1]["content"])

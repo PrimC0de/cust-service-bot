@@ -1,6 +1,6 @@
 # Context-aware Telegram RAG bot
 
-A single-process Telegram DM bot with in-memory conversational context and calibrated dense retrieval. Every hosted embedding and language model is accessed through OpenRouter, and answers are composed only from retrieved knowledge chunks.
+A single-process Telegram DM bot with in-memory conversational context and calibrated dense retrieval. Every hosted embedding and language model is accessed through OpenRouter. Answers may use facts explicitly provided by the user in recent conversation, while company and platform claims must come from retrieved knowledge chunks.
 
 The current deployment intentionally has no database, Redis, API server, health endpoint, or local ML model.
 
@@ -52,14 +52,15 @@ The bot uses Telegram polling and accepts private chats only. Messages arriving 
 The current batch alone is embedded for the first global search:
 
 - A top score at or above the calibrated cutoff goes directly to grounded composition.
-- A weak score gets one history-aware reformulation/translation and one more dense search.
+- Composition receives the current message, four recent exchanges, and retrieved chunks. It may use explicit user statements for conversational facts and relevant KB chunks for company claims.
+- A weak score gets one history-aware resolution step. It may answer directly from explicit user statements or produce a standalone reformulated query for one more dense search.
 - A second weak result produces one focused clarification question.
-- A clarification reply is searched alone first; when weak, it is combined with the unresolved query for one final search.
+- A clarification reply is searched alone first; when weak, the unresolved query and reply are resolved together for one final search.
 - Remaining weak evidence produces fixed insufficient-information text.
 - Missing retrieval or exhausted providers produce fixed service-unavailable text.
 - Provider retries repeat only the failed API call. Telegram delivery retries reuse the completed reply.
 
-The model is never allowed to silently replace missing KB evidence with its own knowledge.
+Prior assistant replies and the model's own knowledge are never treated as evidence.
 
 ## Request flow
 
@@ -68,21 +69,18 @@ flowchart TD
     A["Telegram DM bubbles"] --> B["3-second per-user debounce"]
     B --> C["Current-message dense search (top 4)"]
     C --> D{"Score meets calibrated cutoff?"}
-    D -- Yes --> E["Grounded composition"]
+    D -- Yes --> E["Compose from user context and relevant KB evidence"]
     E --> F{"Answer or conflicting evidence?"}
     F -- Answer --> G["Deliver cached reply"]
     F -- Conflict --> H["Ask one clarification"]
-    D -- No --> I{"Clarification already pending?"}
-    I -- No --> J["Reformulate once with recent history"]
-    J --> K["Second dense search"]
+    D -- No --> J["Resolve once with recent history"]
+    J --> I{"Explicit user context answers it?"}
+    I -- Yes --> G
+    I -- No --> K["Search the standalone resolved query"]
     K --> L{"Score meets cutoff?"}
     L -- Yes --> E
-    L -- No --> H
-    I -- Yes --> M["Combine unresolved query and reply"]
-    M --> N["Final dense search"]
-    N --> O{"Score meets cutoff?"}
-    O -- Yes --> E
-    O -- No --> P["Fixed insufficient-information reply"]
+    L -- No, first attempt --> H
+    L -- No, clarification already used --> P["Fixed insufficient-information reply"]
     C -. Retrieval unavailable .-> Q["Fixed service-unavailable reply"]
     J -. Providers exhausted .-> Q
     E -. Providers exhausted .-> Q
