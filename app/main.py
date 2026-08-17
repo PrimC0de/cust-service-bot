@@ -23,12 +23,9 @@ from app.providers.client import ClientRegistry
 from app.providers.router import ProviderRouter
 from app.rag.generation import GenerationService
 from app.rag.pipeline import RAGPipeline
-from app.rag.retrieval.bm25 import BM25Retriever
 from app.rag.retrieval.dense import DenseRetriever, load_chunks
-from app.rag.retrieval.hybrid import HybridRetriever
 
 
-logger = logging.getLogger(__name__)
 CLEANUP_TASK_KEY = "conversation_cleanup_task"
 
 
@@ -43,14 +40,10 @@ def build_application(settings: Settings | None = None) -> Application:
     if not chunks:
         raise RuntimeError("The chunks index is empty; no valid retrieval source exists")
 
-    profiles = build_profiles(settings)
+    profiles = build_profiles()
     selector = ProfileSelector(profiles, settings.initial_profile)
-    clients = ClientRegistry(settings, profiles)
-    try:
-        embedding_client = clients.embeddings()
-    except RuntimeError:
-        embedding_client = None
-        logger.warning("OpenAI embeddings unavailable at startup; using BM25 only")
+    clients = ClientRegistry(settings)
+    embedding_client = clients.embeddings()
 
     dense = DenseRetriever(
         embedding_client,
@@ -59,19 +52,20 @@ def build_application(settings: Settings | None = None) -> Application:
         settings.index_path,
         settings.manifest_path,
     )
-    bm25 = BM25Retriever(chunks)
-    if not dense.available and not bm25.available:
-        raise RuntimeError("No valid dense or BM25 retrieval source exists")
+    if not dense.available:
+        raise RuntimeError(
+            "No compatible calibrated dense index exists. "
+            "Run: python -m scripts.ingest --rebuild"
+        )
 
-    retriever = HybridRetriever(chunks, dense, bm25, top_k=settings.retrieval_top_k)
-    generation = GenerationService(ProviderRouter(clients), top_n=settings.rerank_top_n)
-    pipeline = RAGPipeline(retriever, generation, profiles)
+    generation = GenerationService(ProviderRouter(clients))
+    pipeline = RAGPipeline(dense, generation, profiles, top_k=settings.retrieval_top_k)
     store = ConversationStore(
         debounce_seconds=settings.debounce_seconds,
         history_exchanges=settings.history_exchanges,
         idle_ttl_seconds=settings.idle_ttl_seconds,
         cleanup_interval_seconds=settings.cleanup_interval_seconds,
-        dispatch_attempts=settings.debounce_attempts,
+        delivery_attempts=settings.delivery_attempts,
         profile_snapshot=selector.snapshot,
     )
 
@@ -116,6 +110,8 @@ def main() -> None:
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(name)s %(message)s",
     )
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+    logging.getLogger("httpx2").setLevel(logging.WARNING)
     build_application().run_polling(drop_pending_updates=True)
 
 

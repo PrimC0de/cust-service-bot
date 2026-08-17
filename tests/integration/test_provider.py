@@ -6,9 +6,7 @@ from app.models import ModelProfileSnapshot
 from app.providers.router import ProviderFailure, ProviderRouter
 
 
-PROFILE = ModelProfileSnapshot(
-    "provider", "url", "OPENAI_API_KEY", "rerank", "rewrite", "compose", 3
-)
+PROFILE = ModelProfileSnapshot("provider", "rewrite", "compose", 3)
 
 
 class FakeCompletions:
@@ -68,5 +66,5 @@ class ProviderTests(unittest.IsolatedAsyncioTestCase):
                 "model",
                 [{"role": "user", "content": "question"}],
                 batch_id="batch",
-                stage="rerank",
+                stage="reformulate",
             )

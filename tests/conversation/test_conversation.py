@@ -1,15 +1,14 @@
 import asyncio
 import unittest
 
+from telegram.error import NetworkError
+
 from app.bot.conversation import ConversationStore
-from app.models import ModelProfileSnapshot, PipelineReply
+from app.models import ModelProfileSnapshot, PipelineReply, UnresolvedClarification
 
 
 PROFILE = ModelProfileSnapshot(
     name="test",
-    base_url="https://example.invalid/v1",
-    api_key_env="OPENAI_API_KEY",
-    rerank_model="rerank",
     reformulate_model="reformulate",
     compose_model="compose",
     attempts=1,
@@ -22,7 +21,7 @@ class ConversationStoreTests(unittest.IsolatedAsyncioTestCase):
             debounce_seconds=0.02,
             history_exchanges=4,
             idle_ttl_seconds=86_400,
-            dispatch_attempts=3,
+            delivery_attempts=3,
             profile_snapshot=lambda: PROFILE,
         )
 
@@ -33,7 +32,7 @@ class ConversationStoreTests(unittest.IsolatedAsyncioTestCase):
         processed = []
         delivered = []
 
-        async def process(batch, history):
+        async def process(batch, history, _unresolved):
             processed.append((batch, history))
             return PipelineReply("answer", "answer")
 
@@ -55,11 +54,11 @@ class ConversationStoreTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(processed[0][0].text, "first\n\nsecond")
         self.assertEqual(delivered, ["answer"])
 
-    async def test_dispatch_retries_three_times_with_same_batch_id(self):
+    async def test_pipeline_failure_is_not_retried(self):
         ids = []
         delivered = []
 
-        async def process(batch, _history):
+        async def process(batch, _history, _unresolved):
             ids.append(batch.batch_id)
             raise RuntimeError("provider down")
 
@@ -76,16 +75,68 @@ class ConversationStoreTests(unittest.IsolatedAsyncioTestCase):
             unavailable=lambda _: "unavailable",
         )
         await asyncio.sleep(0.06)
-        self.assertEqual(len(ids), 3)
+        self.assertEqual(len(ids), 1)
         self.assertEqual(len(set(ids)), 1)
         self.assertEqual(delivered, ["unavailable"])
+
+    async def test_transient_delivery_retries_cached_reply_only(self):
+        processed = []
+        deliveries = []
+
+        async def process(batch, _history, _unresolved):
+            processed.append(batch.batch_id)
+            return PipelineReply("answer", "answer")
+
+        async def deliver(text):
+            deliveries.append(text)
+            if len(deliveries) == 1:
+                raise NetworkError("temporary")
+
+        await self.store.submit(
+            user_id=1,
+            chat_id=1,
+            message_id=1,
+            text="hello",
+            process=process,
+            deliver=deliver,
+            unavailable=lambda _: "unavailable",
+        )
+        await asyncio.sleep(0.06)
+        self.assertEqual(len(processed), 1)
+        self.assertEqual(deliveries, ["answer", "answer"])
+
+    async def test_successful_replies_store_and_clear_clarification(self):
+        pending = UnresolvedClarification("original", "rewritten", "Which one?")
+        replies = [PipelineReply("Which one?", "clarify", pending), PipelineReply("answer", "answer")]
+        seen = []
+
+        async def process(_batch, _history, unresolved):
+            seen.append(unresolved)
+            return replies.pop(0)
+
+        async def deliver(_text):
+            pass
+
+        common = dict(
+            user_id=1,
+            chat_id=1,
+            process=process,
+            deliver=deliver,
+            unavailable=lambda _: "unavailable",
+        )
+        await self.store.submit(message_id=1, text="ambiguous", **common)
+        await asyncio.sleep(0.04)
+        await self.store.submit(message_id=2, text="clarification", **common)
+        await asyncio.sleep(0.04)
+        self.assertEqual(seen, [None, pending])
+        self.assertIsNone(self.store.states[1].unresolved)
 
     async def test_users_are_isolated_and_same_user_follow_up_is_ordered(self):
         started = asyncio.Event()
         release = asyncio.Event()
         events = []
 
-        async def process(batch, history):
+        async def process(batch, history, _unresolved):
             events.append(("start", batch.user_id, batch.text, len(history)))
             if batch.text == "slow":
                 started.set()
@@ -128,7 +179,7 @@ class ConversationStoreTests(unittest.IsolatedAsyncioTestCase):
             clock=lambda: now[0],
         )
 
-        async def process(batch, _history):
+        async def process(batch, _history, _unresolved):
             return PipelineReply(f"a{batch.message_id if hasattr(batch, 'message_id') else ''}", "answer")
 
         async def deliver(_text):
@@ -161,7 +212,7 @@ class ConversationStoreTests(unittest.IsolatedAsyncioTestCase):
             profile_snapshot=lambda: selected[0],
         )
 
-        async def process(batch, _history):
+        async def process(batch, _history, _unresolved):
             seen.append(batch.profile.name)
             started.set()
             await release.wait()
@@ -182,9 +233,6 @@ class ConversationStoreTests(unittest.IsolatedAsyncioTestCase):
         await started.wait()
         selected[0] = ModelProfileSnapshot(
             name="replacement",
-            base_url="url",
-            api_key_env="OPENAI_API_KEY",
-            rerank_model="r",
             reformulate_model="f",
             compose_model="c",
             attempts=1,

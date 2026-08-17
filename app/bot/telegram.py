@@ -42,7 +42,7 @@ async def text_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
     await context.bot.send_chat_action(chat_id=chat.id, action=ChatAction.TYPING)
 
-    async def process(batch: PendingBatch, history):
+    async def process(batch: PendingBatch, history, unresolved):
         if batch.profile is None:
             raise RuntimeError("Batch has no model profile snapshot")
         async with semaphore:
@@ -51,6 +51,7 @@ async def text_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                 history,
                 batch.profile,
                 batch_id=batch.batch_id,
+                unresolved=unresolved,
             )
 
     async def deliver(text: str) -> None:

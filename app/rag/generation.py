@@ -1,8 +1,8 @@
-"""Structured evidence decisions and grounded generation."""
+"""History-aware query recovery and grounded generation."""
 
 from __future__ import annotations
 
-from app.models import EvidenceDecision, ModelProfileSnapshot, RetrievalHit
+from app.models import CompositionResult, ModelProfileSnapshot, ReformulationResult, RetrievalHit
 from app.providers.router import ProviderFailure, ProviderRouter
 from app.rag.context import format_history
 from app.rag.prompts import (
@@ -10,57 +10,12 @@ from app.rag.prompts import (
     COMPOSE_USER,
     REFORMULATE_SYSTEM,
     REFORMULATE_USER,
-    RERANK_SYSTEM,
-    RERANK_USER,
 )
 
 
 class GenerationService:
-    def __init__(self, router: ProviderRouter, *, top_n: int = 3):
+    def __init__(self, router: ProviderRouter):
         self.router = router
-        self.top_n = top_n
-
-    async def decide(
-        self,
-        profile: ModelProfileSnapshot,
-        query: str,
-        hits: tuple[RetrievalHit, ...],
-        *,
-        batch_id: str,
-    ) -> EvidenceDecision:
-        candidate_ids = {hit.chunk.chunk_id for hit in hits}
-        candidates = "\n\n".join(
-            f"[chunk_id={hit.chunk.chunk_id}] "
-            f"{hit.chunk.document_title} > {' > '.join(hit.chunk.section_path)}\n"
-            f"{hit.chunk.text}"
-            for hit in hits
-        )
-        data = await self.router.json(
-            profile,
-            profile.rerank_model,
-            [
-                {"role": "system", "content": RERANK_SYSTEM},
-                {"role": "user", "content": RERANK_USER.format(query=query, candidates=candidates)},
-            ],
-            batch_id=batch_id,
-            stage="rerank",
-        )
-
-        status = data.get("status")
-        if status not in {"answer", "clarify", "weak"}:
-            raise ProviderFailure("Reranker returned an invalid evidence status")
-        ranked = tuple(
-            chunk_id
-            for chunk_id in data.get("ranked_chunk_ids", [])
-            if isinstance(chunk_id, int) and chunk_id in candidate_ids
-        )[: self.top_n]
-        clarification = data.get("clarification")
-
-        if status == "answer" and not ranked:
-            return EvidenceDecision(status="weak")
-        if status == "clarify" and not isinstance(clarification, str):
-            raise ProviderFailure("Reranker omitted its clarification question")
-        return EvidenceDecision(status=status, ranked_chunk_ids=ranked, clarification=clarification)
 
     async def reformulate(
         self,
@@ -70,7 +25,7 @@ class GenerationService:
         history,
         *,
         batch_id: str,
-    ) -> str:
+    ) -> ReformulationResult:
         data = await self.router.json(
             profile,
             profile.reformulate_model,
@@ -87,41 +42,53 @@ class GenerationService:
             ],
             batch_id=batch_id,
             stage="reformulate",
+            max_tokens=200,
         )
         rewritten = data.get("query")
+        clarification = data.get("clarification")
         if not isinstance(rewritten, str) or not rewritten.strip():
             raise ProviderFailure("Reformulator returned an empty query")
-        return rewritten.strip()
+        if not isinstance(clarification, str) or not clarification.strip():
+            raise ProviderFailure("Reformulator returned an empty clarification")
+        return ReformulationResult(rewritten.strip(), clarification.strip())
 
     async def compose(
         self,
         profile: ModelProfileSnapshot,
         current: str,
+        history,
         hits: tuple[RetrievalHit, ...],
-        ranked_ids: tuple[int, ...],
         *,
         batch_id: str,
-    ) -> str:
-        by_id = {hit.chunk.chunk_id: hit for hit in hits}
-        selected = [by_id[chunk_id] for chunk_id in ranked_ids if chunk_id in by_id]
-        if not selected:
+    ) -> CompositionResult:
+        if not hits:
             raise ProviderFailure("No grounded chunks were selected for composition")
         context = "\n\n".join(
             f"--- {hit.chunk.document_title} > {' > '.join(hit.chunk.section_path)} ---\n"
             f"{hit.chunk.text}"
-            for hit in selected
+            for hit in hits
         )
-        answer = await self.router.text(
+        data = await self.router.json(
             profile,
             profile.compose_model,
             [
                 {"role": "system", "content": COMPOSE_SYSTEM},
-                {"role": "user", "content": COMPOSE_USER.format(current=current, context=context)},
+                {
+                    "role": "user",
+                    "content": COMPOSE_USER.format(
+                        history=format_history(history), current=current, context=context
+                    ),
+                },
             ],
             batch_id=batch_id,
             stage="compose",
+            max_tokens=800,
         )
-        return answer[:4000]
+        kind = data.get("kind")
+        text = data.get("text")
+        if kind not in {"answer", "clarify"} or not isinstance(text, str) or not text.strip():
+            raise ProviderFailure("Composer returned an invalid result")
+        return CompositionResult(kind, text.strip()[:4000])
 
 
 TRADITIONAL_MARKERS = set("後發臺灣這個為與專業處理問題聯絡號碼資訊轉帳銀行額戶體驗應該說明還請")

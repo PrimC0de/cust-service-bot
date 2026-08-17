@@ -1,4 +1,4 @@
-Withdrawal Pending or Not Received
+Withdrawal Pending or Not Received / 提款未到帳 / 提现未到账
 
 Normal withdrawal processing times:
 - Standard: 30 minutes to 2 hours

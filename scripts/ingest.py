@@ -9,11 +9,11 @@ from openai import AsyncOpenAI
 
 from app.config.settings import Settings
 from app.rag.ingestion.chunker import chunk_documents
-from app.rag.ingestion.indexer import build_indexes
+from app.rag.ingestion.indexer import build_indexes, embed_texts, load_evaluation_cases
 from app.rag.ingestion.parser import parse_documents
 
 
-async def ingest(settings: Settings, rebuild: bool) -> None:
+def ingest(settings: Settings, rebuild: bool) -> None:
     if settings.chunks_path.exists() and not rebuild:
         print("Indexes already exist. Use --rebuild to replace them.")
         return
@@ -24,32 +24,42 @@ async def ingest(settings: Settings, rebuild: bool) -> None:
         chunk_size=settings.chunk_size,
         chunk_overlap=settings.chunk_overlap,
     )
-    client = None
-    if settings.openai_api_key:
-        client = AsyncOpenAI(
-            api_key=settings.openai_api_key,
-            base_url=settings.openai_base_url,
-            max_retries=0,
+    if not settings.openrouter_api_key:
+        raise RuntimeError("OPENROUTER_API_KEY is required for dense ingestion")
+    cases = load_evaluation_cases(settings.retrieval_evaluation_path)
+    print(f"Embedding {len(chunks)} chunks and {len(cases)} evaluation queries...", flush=True)
+    client = AsyncOpenAI(
+        api_key=settings.openrouter_api_key,
+        base_url=settings.openrouter_base_url,
+        max_retries=0,
+    )
+    vectors = asyncio.run(
+        embed_texts(
+            client,
+            settings.embedding_model,
+            [chunk.embedding_text for chunk in chunks] + [case["query"] for case in cases],
+            settings.embedding_batch_size,
         )
-    else:
-        print("OPENAI_API_KEY is absent; writing a BM25-only chunk index.")
-
-    manifest = await build_indexes(
+    )
+    print("Calibrating and writing FAISS artifacts...", flush=True)
+    manifest = build_indexes(
         chunks,
         indexes_dir=settings.indexes_dir,
-        embedding_client=client,
         embedding_model=settings.embedding_model,
-        embedding_batch_size=settings.embedding_batch_size,
+        evaluation_cases=cases,
+        vectors=vectors,
     )
-    mode = "dense + BM25" if manifest["dense_available"] else "BM25 only"
-    print(f"Indexed {len(chunks)} chunks from {len(documents)} documents ({mode}).")
+    print(
+        f"Indexed {len(chunks)} chunks from {len(documents)} documents "
+        f"(dense, confidence threshold {manifest['confidence_threshold']:.4f})."
+    )
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build retrieval artifacts from the knowledge base")
     parser.add_argument("--rebuild", action="store_true", help="replace existing artifacts")
     args = parser.parse_args()
-    asyncio.run(ingest(Settings(), args.rebuild))
+    ingest(Settings(), args.rebuild)
 
 
 if __name__ == "__main__":

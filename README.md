@@ -1,6 +1,6 @@
 # Context-aware Telegram RAG bot
 
-A single-process Telegram DM bot with in-memory conversational context and evidence-first hybrid retrieval. It combines a hosted OpenAI dense index with local multilingual BM25, always reranks retrieved evidence, and composes answers only from selected knowledge chunks.
+A single-process Telegram DM bot with in-memory conversational context and calibrated dense retrieval. Every hosted embedding and language model is accessed through OpenRouter, and answers are composed only from retrieved knowledge chunks.
 
 The current deployment intentionally has no database, Redis, API server, health endpoint, or local ML model.
 
@@ -15,17 +15,17 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Set the Telegram token, admin IDs, and provider credentials in `.env`. OpenAI is also used for hosted `text-embedding-3-small` embeddings. If it is unavailable at bot startup but valid chunks exist, retrieval starts in BM25-only mode.
+Set the Telegram token, admin IDs, and `OPENROUTER_API_KEY` in `.env`. OpenRouter serves `openai/text-embedding-3-small` embeddings. A compatible calibrated FAISS index is required at startup.
 
 ## Model profiles
 
 `ACTIVE_MODEL_PROFILE` accepts one of three preconfigured names:
 
-- `openrouter`: development and provider experimentation through OpenRouter.
-- `kimi`: direct Kimi reranking/reformulation and composition, with OpenAI failover.
-- `reranking-reformulation`: direct OpenAI reranking/reformulation and composition.
+- `openrouter`: Gemini 2.5 Flash Lite reformulation and composition through OpenRouter, with GPT-5.6 Luna failover.
+- `kimi`: optional Kimi K2.6/K3 reformulation and composition through OpenRouter.
+- `reranking-reformulation`: GPT-5.6 Luna reformulation and composition through OpenRouter. The existing name is retained for command compatibility.
 
-Model names and routing behavior are fixed in code. Telegram users listed in `TELEGRAM_ADMIN_IDS` may inspect or switch the live profile with `/model` and `/model <profile>`. A batch keeps the profile selected when its debounce completes.
+All profiles use only the OpenRouter endpoint and key. Model names and routing behavior are fixed in code. Telegram users listed in `TELEGRAM_ADMIN_IDS` may inspect or switch the live profile with `/model` and `/model <profile>`. A batch keeps the profile selected when its debounce completes.
 
 ## Build retrieval artifacts
 
@@ -35,7 +35,9 @@ Place approved `.txt` or `.md` documents under `data/raw/knowledge/<category>/`.
 python -m scripts.ingest --rebuild
 ```
 
-Ingestion parses document structure, merges small related sections, splits large sections at 500 characters with 50-character overlap, and writes ordered metadata plus a manifest under `data/indexes/`. With `OPENAI_API_KEY`, it also creates a normalized FAISS index. Rebuild whenever the chunking schema or embedding model changes.
+Ingestion parses document structure, merges small related sections, splits large sections at 500 characters with 50-character overlap, and writes ordered metadata plus a normalized FAISS index under `data/indexes/`. It calibrates the confidence cutoff from `data/evaluation/retrieval_cases.json` and refuses to build when supported and out-of-KB scores overlap. Temporary files are atomically installed only after embedding and calibration succeed.
+
+Rebuild whenever the chunking schema, embedding model, KB, or retrieval evaluation changes. There is no lexical-only fallback.
 
 ## Run
 
@@ -47,15 +49,44 @@ The bot uses Telegram polling and accepts private chats only. Messages arriving 
 
 ## Retrieval behavior
 
-The current batch and immediately preceding exchange form the initial global retrieval query. Dense and BM25 candidates are merged and reranked by the active provider:
+The current batch alone is embedded for the first global search:
 
-- Strong KB evidence is composed into a grounded answer.
-- Ambiguous intent or conflicting strong evidence produces a clarification question.
-- Weak evidence gets one history-aware reformulation/translation and a second hybrid retrieval.
-- Evidence that remains weak produces a fixed insufficient-information response.
-- Provider exhaustion produces a fixed service-unavailable response.
+- A top score at or above the calibrated cutoff goes directly to grounded composition.
+- A weak score gets one history-aware reformulation/translation and one more dense search.
+- A second weak result produces one focused clarification question.
+- A clarification reply is searched alone first; when weak, it is combined with the unresolved query for one final search.
+- Remaining weak evidence produces fixed insufficient-information text.
+- Missing retrieval or exhausted providers produce fixed service-unavailable text.
+- Provider retries repeat only the failed API call. Telegram delivery retries reuse the completed reply.
 
 The model is never allowed to silently replace missing KB evidence with its own knowledge.
+
+## Request flow
+
+```mermaid
+flowchart TD
+    A["Telegram DM bubbles"] --> B["3-second per-user debounce"]
+    B --> C["Current-message dense search (top 4)"]
+    C --> D{"Score meets calibrated cutoff?"}
+    D -- Yes --> E["Grounded composition"]
+    E --> F{"Answer or conflicting evidence?"}
+    F -- Answer --> G["Deliver cached reply"]
+    F -- Conflict --> H["Ask one clarification"]
+    D -- No --> I{"Clarification already pending?"}
+    I -- No --> J["Reformulate once with recent history"]
+    J --> K["Second dense search"]
+    K --> L{"Score meets cutoff?"}
+    L -- Yes --> E
+    L -- No --> H
+    I -- Yes --> M["Combine unresolved query and reply"]
+    M --> N["Final dense search"]
+    N --> O{"Score meets cutoff?"}
+    O -- Yes --> E
+    O -- No --> P["Fixed insufficient-information reply"]
+    C -. Retrieval unavailable .-> Q["Fixed service-unavailable reply"]
+    J -. Providers exhausted .-> Q
+    E -. Providers exhausted .-> Q
+```
 
 ## Tests
 
@@ -63,4 +94,4 @@ The model is never allowed to silently replace missing KB evidence with its own 
 python -m unittest discover -s tests -v
 ```
 
-Evaluation fixtures remain under `data/evaluation/`. Generated retrieval artifacts and `.env` are ignored by Git.
+Retrieval calibration and other evaluation fixtures remain under `data/evaluation/`. Generated retrieval artifacts and `.env` are ignored by Git.

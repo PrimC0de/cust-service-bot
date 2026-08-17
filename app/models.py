@@ -21,6 +21,13 @@ class ConversationExchange:
 
 
 @dataclass(frozen=True)
+class UnresolvedClarification:
+    original_query: str
+    reformulated_query: str
+    question: str
+
+
+@dataclass(frozen=True)
 class PendingMessage:
     message_id: int
     text: str
@@ -50,6 +57,7 @@ class UserConversationState:
     processing_lock: asyncio.Lock = field(default_factory=asyncio.Lock)
     processing: bool = False
     completed_batches: set[str] = field(default_factory=set)
+    unresolved: UnresolvedClarification | None = None
 
 
 @dataclass(frozen=True)
@@ -82,30 +90,24 @@ class KnowledgeChunk:
 @dataclass(frozen=True)
 class RetrievalHit:
     chunk: KnowledgeChunk
-    dense_score: float | None = None
-    bm25_score: float | None = None
-    fused_score: float = 0.0
+    dense_score: float
 
 
 @dataclass(frozen=True)
-class HybridRetrievalResult:
-    hits: tuple[RetrievalHit, ...]
-    dense_available: bool
+class ReformulationResult:
+    query: str
+    clarification: str
 
 
 @dataclass(frozen=True)
-class EvidenceDecision:
-    status: Literal["answer", "clarify", "weak"]
-    ranked_chunk_ids: tuple[int, ...] = ()
-    clarification: str | None = None
+class CompositionResult:
+    kind: Literal["answer", "clarify"]
+    text: str
 
 
 @dataclass(frozen=True)
 class ModelProfileSnapshot:
     name: str
-    base_url: str
-    api_key_env: str
-    rerank_model: str
     reformulate_model: str
     compose_model: str
     attempts: int
@@ -116,10 +118,15 @@ class ModelProfileSnapshot:
 class PipelineReply:
     text: str
     kind: Literal["answer", "clarify", "insufficient"]
+    unresolved: UnresolvedClarification | None = None
 
 
 BatchProcessor = Callable[
-    [PendingBatch, tuple[ConversationExchange, ...]],
+    [
+        PendingBatch,
+        tuple[ConversationExchange, ...],
+        UnresolvedClarification | None,
+    ],
     Awaitable[PipelineReply],
 ]
 MessageDeliverer = Callable[[str], Awaitable[None]]

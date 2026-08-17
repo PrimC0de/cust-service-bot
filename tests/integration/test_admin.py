@@ -7,7 +7,7 @@ from app.models import ModelProfileSnapshot
 
 
 def profile(name):
-    return ModelProfileSnapshot(name, "url", "OPENAI_API_KEY", "r", "f", "c", 1)
+    return ModelProfileSnapshot(name, "f", "c", 1)
 
 
 class FakeMessage:

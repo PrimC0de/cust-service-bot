@@ -9,6 +9,8 @@ import uuid
 from collections import deque
 from collections.abc import Callable
 
+from telegram.error import NetworkError, RetryAfter
+
 from app.models import (
     BatchProcessor,
     ConversationExchange,
@@ -34,7 +36,7 @@ class ConversationStore:
         history_exchanges: int = 4,
         idle_ttl_seconds: float = 86_400,
         cleanup_interval_seconds: float = 3_600,
-        dispatch_attempts: int = 3,
+        delivery_attempts: int = 3,
         profile_snapshot: Callable[[], ModelProfileSnapshot] | None = None,
         clock: Callable[[], float] = time.monotonic,
     ):
@@ -42,7 +44,7 @@ class ConversationStore:
         self.history_exchanges = history_exchanges
         self.idle_ttl_seconds = idle_ttl_seconds
         self.cleanup_interval_seconds = cleanup_interval_seconds
-        self.dispatch_attempts = dispatch_attempts
+        self.delivery_attempts = delivery_attempts
         self.profile_snapshot = profile_snapshot
         self.clock = clock
         self.states: dict[int, UserConversationState] = {}
@@ -154,38 +156,48 @@ class ConversationStore:
         deliver: MessageDeliverer,
         unavailable: Callable[[str], str],
     ) -> None:
-        reply: PipelineReply | None = None
-        for attempt in range(1, self.dispatch_attempts + 1):
+        try:
+            reply = await process(batch, history, state.unresolved)
+        except Exception as error:
+            logger.warning(
+                "batch_id=%s stage=pipeline profile=%s attempt=1 error_type=%s",
+                batch.batch_id,
+                batch.profile.name if batch.profile else "unset",
+                type(error).__name__,
+            )
+            await self._deliver(batch, unavailable(batch.text), deliver, "failure_delivery")
+            return
+
+        if batch.batch_id in state.completed_batches:
+            return
+        if await self._deliver(batch, reply.text, deliver, "reply_delivery"):
+            state.completed_batches.add(batch.batch_id)
+            state.history.append(ConversationExchange(user=batch.text, assistant=reply.text))
+            state.unresolved = reply.unresolved
+
+    async def _deliver(
+        self,
+        batch: PendingBatch,
+        text: str,
+        deliver: MessageDeliverer,
+        stage: str,
+    ) -> bool:
+        for attempt in range(1, self.delivery_attempts + 1):
             try:
-                if reply is None:
-                    reply = await process(batch, history)
-                if batch.batch_id not in state.completed_batches:
-                    await deliver(reply.text)
-                    state.completed_batches.add(batch.batch_id)
-                    state.history.append(
-                        ConversationExchange(user=batch.text, assistant=reply.text)
-                    )
-                return
+                await deliver(text)
+                return True
             except Exception as error:
                 logger.warning(
-                    "batch_id=%s stage=dispatch profile=%s attempt=%s error_type=%s",
+                    "batch_id=%s stage=%s profile=%s attempt=%s error_type=%s",
                     batch.batch_id,
+                    stage,
                     batch.profile.name if batch.profile else "unset",
                     attempt,
                     type(error).__name__,
                 )
-
-        if batch.batch_id not in state.completed_batches:
-            try:
-                await deliver(unavailable(batch.text))
-                state.completed_batches.add(batch.batch_id)
-            except Exception as error:
-                logger.error(
-                    "batch_id=%s stage=failure_delivery profile=%s attempt=1 error_type=%s",
-                    batch.batch_id,
-                    batch.profile.name if batch.profile else "unset",
-                    type(error).__name__,
-                )
+                if not isinstance(error, (NetworkError, RetryAfter)):
+                    break
+        return False
 
     async def cleanup_expired(self) -> int:
         now = self.clock()

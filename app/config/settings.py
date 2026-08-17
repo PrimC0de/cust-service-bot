@@ -23,18 +23,13 @@ class Settings:
     telegram_bot_token: str = os.getenv("TELEGRAM_BOT_TOKEN", "")
     telegram_admin_ids: frozenset[int] = _int_set(os.getenv("TELEGRAM_ADMIN_IDS", ""))
 
-    openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
-    kimi_api_key: str = os.getenv("KIMI_API_KEY", "")
     openrouter_api_key: str = os.getenv("OPENROUTER_API_KEY", "")
 
-    openai_base_url: str = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
-    kimi_base_url: str = os.getenv("KIMI_BASE_URL", "https://api.moonshot.ai/v1")
     openrouter_base_url: str = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
     initial_profile: str = os.getenv("ACTIVE_MODEL_PROFILE", "openrouter")
 
-    embedding_model: str = "text-embedding-3-small"
-    retrieval_top_k: int = 10
-    rerank_top_n: int = 3
+    embedding_model: str = "openai/text-embedding-3-small"
+    retrieval_top_k: int = 4
     embedding_batch_size: int = 100
 
     debounce_seconds: float = 3.0
@@ -43,7 +38,7 @@ class Settings:
     cleanup_interval_seconds: float = 3_600
     max_concurrent_pipelines: int = 20
     concurrent_updates: int = 32
-    debounce_attempts: int = 3
+    delivery_attempts: int = 3
 
     chunk_size: int = 500
     chunk_overlap: int = 50
@@ -55,6 +50,10 @@ class Settings:
     @property
     def evaluation_dir(self) -> Path:
         return self.root_dir / "data" / "evaluation"
+
+    @property
+    def retrieval_evaluation_path(self) -> Path:
+        return self.evaluation_dir / "retrieval_cases.json"
 
     @property
     def taxonomy_path(self) -> Path:
@@ -75,10 +74,3 @@ class Settings:
     @property
     def manifest_path(self) -> Path:
         return self.indexes_dir / "manifest.json"
-
-    def api_key(self, env_name: str) -> str:
-        return {
-            "OPENAI_API_KEY": self.openai_api_key,
-            "KIMI_API_KEY": self.kimi_api_key,
-            "OPENROUTER_API_KEY": self.openrouter_api_key,
-        }[env_name]

@@ -1,30 +1,34 @@
-"""Evidence-first hybrid RAG pipeline."""
+"""Calibrated dense-only RAG pipeline."""
 
 from __future__ import annotations
 
 from app.models import (
+    CompositionResult,
     ConversationExchange,
-    EvidenceDecision,
     ModelProfileSnapshot,
     PipelineReply,
+    ReformulationResult,
+    RetrievalHit,
+    UnresolvedClarification,
 )
 from app.providers.router import ProviderFailure
-from app.rag.context import build_initial_query
 from app.rag.generation import GenerationService, insufficient_response
-from app.rag.retrieval.hybrid import HybridRetriever
+from app.rag.retrieval.dense import DenseRetriever
 
 
 class RAGPipeline:
     def __init__(
         self,
-        retriever: HybridRetriever,
+        retriever: DenseRetriever,
         generation: GenerationService,
         profiles: dict[str, ModelProfileSnapshot],
+        *,
+        top_k: int = 4,
     ):
         self.retriever = retriever
         self.generation = generation
         self.profiles = profiles
-        self.agreement_bypass_enabled = False
+        self.top_k = top_k
 
     async def run(
         self,
@@ -33,85 +37,124 @@ class RAGPipeline:
         profile: ModelProfileSnapshot,
         *,
         batch_id: str,
+        unresolved: UnresolvedClarification | None = None,
     ) -> PipelineReply:
-        previous = history[-1] if history else None
-        query = build_initial_query(current, previous)
-        retrieval = await self.retriever.search(query, batch_id=batch_id)
-
-        try:
-            return await self._run_profile(
+        hits = await self.retriever.search(current, self.top_k, batch_id=batch_id)
+        if self._strong(hits):
+            return await self._compose_reply(
+                profile,
                 current,
                 history,
-                query,
-                retrieval,
-                profile,
+                hits,
+                retrieval_query=current,
                 batch_id=batch_id,
-                recovered=False,
+                clarification_already_used=unresolved is not None,
+            )
+
+        if unresolved is not None:
+            combined = (
+                f"Unresolved question: {unresolved.reformulated_query}\n\n"
+                f"User clarification: {current}"
+            )
+            recovered = await self.retriever.search(combined, self.top_k, batch_id=batch_id)
+            if self._strong(recovered):
+                return await self._compose_reply(
+                    profile,
+                    current,
+                    history,
+                    recovered,
+                    retrieval_query=combined,
+                    batch_id=batch_id,
+                    clarification_already_used=True,
+                )
+            return PipelineReply(insufficient_response(current), "insufficient")
+
+        reformulated = await self._reformulate(
+            profile, current, current, history, batch_id=batch_id
+        )
+        recovered = await self.retriever.search(
+            reformulated.query, self.top_k, batch_id=batch_id
+        )
+        if self._strong(recovered):
+            return await self._compose_reply(
+                profile,
+                current,
+                history,
+                recovered,
+                retrieval_query=reformulated.query,
+                batch_id=batch_id,
+                clarification_already_used=False,
+            )
+
+        pending = UnresolvedClarification(
+            current, reformulated.query, reformulated.clarification
+        )
+        return PipelineReply(reformulated.clarification, "clarify", pending)
+
+    def _strong(self, hits: tuple[RetrievalHit, ...]) -> bool:
+        threshold = self.retriever.confidence_threshold
+        return bool(hits) and threshold is not None and hits[0].dense_score >= threshold
+
+    def _backup(self, profile: ModelProfileSnapshot) -> ModelProfileSnapshot | None:
+        return self.profiles.get(profile.backup_profile) if profile.backup_profile else None
+
+    async def _reformulate(
+        self,
+        profile: ModelProfileSnapshot,
+        current: str,
+        query: str,
+        history: tuple[ConversationExchange, ...],
+        *,
+        batch_id: str,
+    ) -> ReformulationResult:
+        try:
+            return await self.generation.reformulate(
+                profile, current, query, history, batch_id=batch_id
             )
         except ProviderFailure:
-            if not profile.backup_profile:
+            backup = self._backup(profile)
+            if backup is None:
                 raise
-            backup = self.profiles[profile.backup_profile]
-            return await self._run_profile(
-                current,
-                history,
-                query,
-                retrieval,
-                backup,
-                batch_id=batch_id,
-                recovered=False,
+            return await self.generation.reformulate(
+                backup, current, query, history, batch_id=batch_id
             )
 
-    async def _run_profile(
+    async def _compose_reply(
         self,
-        current,
-        history,
-        query,
-        retrieval,
-        profile,
+        profile: ModelProfileSnapshot,
+        current: str,
+        history: tuple[ConversationExchange, ...],
+        hits: tuple[RetrievalHit, ...],
         *,
-        batch_id,
-        recovered,
+        retrieval_query: str,
+        batch_id: str,
+        clarification_already_used: bool,
     ) -> PipelineReply:
-        if not retrieval.hits:
-            decision = EvidenceDecision(status="weak")
-        else:
-            decision = await self.generation.decide(
-                profile,
-                query,
-                retrieval.hits,
-                batch_id=batch_id,
+        try:
+            result = await self.generation.compose(
+                profile, current, history, hits, batch_id=batch_id
             )
-
-        if decision.status == "clarify":
-            return PipelineReply(text=decision.clarification or "Could you clarify?", kind="clarify")
-
-        if decision.status == "weak":
-            if recovered:
-                return PipelineReply(text=insufficient_response(current), kind="insufficient")
-            rewritten = await self.generation.reformulate(
-                profile,
-                current,
-                query,
-                history,
-                batch_id=batch_id,
+        except ProviderFailure:
+            backup = self._backup(profile)
+            if backup is None:
+                raise
+            result = await self.generation.compose(
+                backup, current, history, hits, batch_id=batch_id
             )
-            retry_retrieval = await self.retriever.search(rewritten, batch_id=batch_id)
-            return await self._run_profile(
-                current,
-                history,
-                rewritten,
-                retry_retrieval,
-                profile,
-                batch_id=batch_id,
-                recovered=True,
-            )
-
-        answer = await self.generation.compose(
-            profile,
-            current,
-            retrieval.hits,
-            decision.ranked_chunk_ids,
-            batch_id=batch_id,
+        return self._composition_reply(
+            result, current, retrieval_query, clarification_already_used
         )
-        return PipelineReply(text=answer, kind="answer")
+
+    @staticmethod
+    def _composition_reply(
+        result: CompositionResult,
+        current: str,
+        retrieval_query: str,
+        clarification_already_used: bool,
+    ) -> PipelineReply:
+        if result.kind == "answer":
+            return PipelineReply(result.text, "answer")
+        if clarification_already_used:
+            return PipelineReply(insufficient_response(current), "insufficient")
+        pending = UnresolvedClarification(current, retrieval_query, result.text)
+        return PipelineReply(result.text, "clarify", pending)

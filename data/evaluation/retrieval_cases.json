@@ -1,0 +1,48 @@
+[
+  {
+    "query": "How do I deposit using USDT?",
+    "expected_source": "data/raw/knowledge/deposit-top-up/usdt-deposit-guidance.txt"
+  },
+  {
+    "query": "USDT入金教學",
+    "expected_source": "data/raw/knowledge/deposit-top-up/usdt-deposit-guidance.txt"
+  },
+  {
+    "query": "如何使用USDT充值？",
+    "expected_source": "data/raw/knowledge/deposit-top-up/usdt-deposit-guidance.txt"
+  },
+  {
+    "query": "How can I reset a forgotten password?",
+    "expected_source": "data/raw/knowledge/account-login-password-line/forgot-password.txt"
+  },
+  {
+    "query": "我忘記密碼了，應該怎麼重設？",
+    "expected_source": "data/raw/knowledge/account-login-password-line/forgot-password.txt"
+  },
+  {
+    "query": "我的提款一直還沒到帳",
+    "expected_source": "data/raw/knowledge/withdrawal-payout/withdrawal-pending-not-received.txt"
+  },
+  {
+    "query": "Why is my withdrawal still pending?",
+    "expected_source": "data/raw/knowledge/withdrawal-payout/withdrawal-pending-not-received.txt"
+  },
+  {
+    "query": "生日有什麼活動嗎？",
+    "expected_source": "data/raw/knowledge/promotion-bonus-rewards-vip/birthday-reward.txt"
+  },
+  {
+    "query": "How do I contact customer service?",
+    "expected_source": "data/raw/knowledge/common-questions-how-to/customer-service-hours-contact-methods.txt"
+  },
+  {
+    "query": "客服每天幾點上班？",
+    "expected_source": "data/raw/knowledge/common-questions-how-to/customer-service-hours-contact-methods.txt"
+  },
+  {"query": "What is the weather in Tokyo tomorrow?", "expected_source": null},
+  {"query": "Write a Python function that sorts a list.", "expected_source": null},
+  {"query": "Can you recommend a restaurant near me?", "expected_source": null},
+  {"query": "誰贏得了世界盃？", "expected_source": null},
+  {"query": "請幫我預訂明天去上海的機票。", "expected_source": null},
+  {"query": "我想申請房屋貸款，需要什麼文件？", "expected_source": null}
+]

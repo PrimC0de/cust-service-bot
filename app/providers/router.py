@@ -37,6 +37,7 @@ class ProviderRouter:
         batch_id: str,
         stage: str,
         json_mode: bool = False,
+        max_tokens: int | None = None,
     ) -> str:
         try:
             client = self.clients.for_profile(profile)
@@ -59,6 +60,8 @@ class ProviderRouter:
                 }
                 if json_mode:
                     kwargs["response_format"] = {"type": "json_object"}
+                if max_tokens is not None:
+                    kwargs["max_tokens"] = max_tokens
                 response = await client.chat.completions.create(**kwargs)
                 content = response.choices[0].message.content
                 if not content or not content.strip():
@@ -87,6 +90,7 @@ class ProviderRouter:
         *,
         batch_id: str,
         stage: str,
+        max_tokens: int = 300,
     ) -> dict:
         content = await self.text(
             profile,
@@ -95,6 +99,7 @@ class ProviderRouter:
             batch_id=batch_id,
             stage=stage,
             json_mode=True,
+            max_tokens=max_tokens,
         )
         try:
             return json.loads(content)

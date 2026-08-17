@@ -9,39 +9,20 @@ import faiss
 import numpy as np
 
 from app.models import KnowledgeChunk
-from app.rag.retrieval.bm25 import BM25Retriever, tokenize
-from app.rag.retrieval.dense import DenseRetriever
+from app.rag.retrieval.dense import DenseRetrievalError, DenseRetriever
 
 
 def chunk(identifier, text):
     return KnowledgeChunk(
-        chunk_id=identifier,
-        text=text,
-        embedding_text=text,
-        category="category",
-        sub_category="subcategory",
-        source="source.txt",
-        document_title="Title",
-        section_path=("Section",),
+        identifier,
+        text,
+        text,
+        "category",
+        "subcategory",
+        f"source-{identifier}.txt",
+        "Title",
+        ("Section",),
     )
-
-
-class BM25Tests(unittest.TestCase):
-    def test_multilingual_tokenization(self):
-        self.assertIn("password", tokenize("Reset PASSWORD"))
-        self.assertIn("流水", tokenize("查看流水记录"))
-        self.assertIn("帳戶", tokenize("帳戶紀錄"))
-
-    def test_global_search(self):
-        retriever = BM25Retriever(
-            [
-                chunk(0, "reset forgotten password"),
-                chunk(1, "USDT deposit wallet"),
-                chunk(2, "withdrawal processing status"),
-            ]
-        )
-        results = retriever.search("forgot password", 2)
-        self.assertEqual(results[0][0], 0)
 
 
 class FakeEmbeddings:
@@ -62,18 +43,19 @@ class DenseTests(unittest.IsolatedAsyncioTestCase):
         root = Path(self.temp.name)
         self.index_path = root / "index.faiss"
         self.manifest_path = root / "manifest.json"
-        vectors = np.asarray([[1.0, 0.0], [0.0, 1.0]], dtype=np.float32)
         index = faiss.IndexFlatIP(2)
-        index.add(vectors)
+        index.add(np.asarray([[1.0, 0.0], [0.0, 1.0]], dtype=np.float32))
         faiss.write_index(index, str(self.index_path))
         self.manifest_path.write_text(
             json.dumps(
                 {
-                    "schema_version": 1,
+                    "schema_version": 2,
                     "chunking_method": "structure-aware-v1",
                     "embedding_model": "model",
                     "chunk_count": 2,
                     "dimensions": 2,
+                    "dense_available": True,
+                    "confidence_threshold": 0.7,
                 }
             ),
             encoding="utf-8",
@@ -95,9 +77,10 @@ class DenseTests(unittest.IsolatedAsyncioTestCase):
         with patch("app.rag.retrieval.dense.is_transient_error", return_value=True):
             results = await dense.search("query", 2, batch_id="batch")
         self.assertEqual(embeddings.calls, 2)
-        self.assertEqual(results[0][0], 0)
+        self.assertEqual(results[0].chunk.chunk_id, 0)
+        self.assertEqual(dense.confidence_threshold, 0.7)
 
-    async def test_embedding_exhaustion_degrades_to_empty_dense_results(self):
+    async def test_embedding_exhaustion_raises_unavailable(self):
         embeddings = FakeEmbeddings(failures=2)
         dense = DenseRetriever(
             SimpleNamespace(embeddings=embeddings),
@@ -107,5 +90,21 @@ class DenseTests(unittest.IsolatedAsyncioTestCase):
             self.manifest_path,
         )
         with patch("app.rag.retrieval.dense.is_transient_error", return_value=True):
-            self.assertEqual(await dense.search("query", 2, batch_id="batch"), [])
+            with self.assertRaises(DenseRetrievalError):
+                await dense.search("query", 2, batch_id="batch")
         self.assertEqual(embeddings.calls, 2)
+
+    async def test_manifest_without_calibration_is_unavailable(self):
+        manifest = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+        del manifest["confidence_threshold"]
+        self.manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+        dense = DenseRetriever(
+            SimpleNamespace(embeddings=FakeEmbeddings()),
+            "model",
+            self.chunks,
+            self.index_path,
+            self.manifest_path,
+        )
+        self.assertFalse(dense.available)
+        with self.assertRaises(DenseRetrievalError):
+            await dense.search("query", batch_id="batch")

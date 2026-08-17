@@ -1,1 +1,1 @@
-"""Dense and lexical retrieval."""
+"""Calibrated dense retrieval."""
