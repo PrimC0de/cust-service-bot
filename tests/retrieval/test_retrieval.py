@@ -51,6 +51,7 @@ class DenseTests(unittest.IsolatedAsyncioTestCase):
                 {
                     "schema_version": 2,
                     "chunking_method": "structure-aware-v1",
+                    "embedding_provider": "openai",
                     "embedding_model": "model",
                     "chunk_count": 2,
                     "dimensions": 2,

@@ -7,19 +7,11 @@ from app.models import ModelProfileSnapshot
 
 def build_profiles() -> dict[str, ModelProfileSnapshot]:
     return {
-        "openrouter": ModelProfileSnapshot(
-            name="openrouter",
-            reformulate_model="openai/gpt-5-nano",
-            compose_model="openai/gpt-5-nano",
+        "openai": ModelProfileSnapshot(
+            name="openai",
+            reformulate_model="gpt-5.6-luna",
+            compose_model="gpt-5.6-luna",
             attempts=2,
-            backup_profile="kimi",
-        ),
-        "kimi": ModelProfileSnapshot(
-            name="kimi",
-            reformulate_model="moonshotai/kimi-k2.6",
-            compose_model="moonshotai/kimi-k3",
-            attempts=2,
-            backup_profile="openrouter",
         ),
     }
 

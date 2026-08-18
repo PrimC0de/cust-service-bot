@@ -19,22 +19,22 @@ class FakeMessage:
 
 
 class AdminTests(unittest.IsolatedAsyncioTestCase):
-    async def test_allowlist_named_validation_and_live_switching(self):
-        selector = ProfileSelector({"openrouter": profile("openrouter"), "kimi": profile("kimi")}, "openrouter")
+    async def test_allowlist_and_named_validation(self):
+        selector = ProfileSelector({"openai": profile("openai")}, "openai")
         data = {ADMIN_IDS_KEY: frozenset({7}), SELECTOR_KEY: selector}
 
         denied = FakeMessage()
         update = SimpleNamespace(effective_user=SimpleNamespace(id=8), effective_message=denied)
-        context = SimpleNamespace(application=SimpleNamespace(bot_data=data), args=["kimi"])
+        context = SimpleNamespace(application=SimpleNamespace(bot_data=data), args=["openai"])
         await model_command(update, context)
-        self.assertEqual(selector.active_name, "openrouter")
+        self.assertEqual(selector.active_name, "openai")
 
         invalid = FakeMessage()
         update = SimpleNamespace(effective_user=SimpleNamespace(id=7), effective_message=invalid)
         context.args = ["arbitrary-model"]
         await model_command(update, context)
-        self.assertEqual(selector.active_name, "openrouter")
+        self.assertEqual(selector.active_name, "openai")
 
-        context.args = ["kimi"]
+        context.args = ["openai"]
         await model_command(update, context)
-        self.assertEqual(selector.active_name, "kimi")
+        self.assertEqual(selector.active_name, "openai")

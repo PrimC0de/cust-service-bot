@@ -119,7 +119,7 @@ def build_indexes(
     manifest = {
         "schema_version": SCHEMA_VERSION,
         "chunking_method": CHUNKING_METHOD,
-        "embedding_provider": "openrouter",
+        "embedding_provider": "openai",
         "embedding_model": embedding_model,
         "dimensions": dimensions,
         "chunk_count": chunk_count,
@@ -157,6 +157,7 @@ def manifest_compatible(manifest: dict, embedding_model: str) -> bool:
     return (
         manifest.get("schema_version") == SCHEMA_VERSION
         and manifest.get("chunking_method") == CHUNKING_METHOD
+        and manifest.get("embedding_provider") == "openai"
         and manifest.get("embedding_model") == embedding_model
         and manifest.get("dense_available") is True
         and isinstance(manifest.get("dimensions"), int)

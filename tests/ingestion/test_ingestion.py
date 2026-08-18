@@ -69,6 +69,7 @@ class IngestionTests(unittest.TestCase):
         )
         self.assertEqual(manifest["schema_version"], SCHEMA_VERSION)
         self.assertEqual(manifest["chunking_method"], CHUNKING_METHOD)
+        self.assertEqual(manifest["embedding_provider"], "openai")
         self.assertTrue(manifest["dense_available"])
         self.assertEqual(manifest["confidence_threshold"], 1.0)
         self.assertTrue(manifest_compatible(manifest, "text-embedding-3-small"))

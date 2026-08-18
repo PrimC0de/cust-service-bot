@@ -1,6 +1,6 @@
 # Context-aware Telegram RAG bot
 
-A single-process Telegram DM bot with in-memory conversational context and calibrated dense retrieval. Every hosted embedding and language model is accessed through OpenRouter. Answers may use facts explicitly provided by the user in recent conversation, while company and platform claims must come from retrieved knowledge chunks.
+A single-process Telegram DM bot with in-memory conversational context and calibrated dense retrieval. Hosted embedding and language-model calls use the direct OpenAI-compatible API. Answers may use facts explicitly provided by the user in recent conversation, while company and platform claims must come from retrieved knowledge chunks.
 
 The current deployment intentionally has no database, Redis, API server, health endpoint, or local ML model.
 
@@ -15,16 +15,15 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Set the Telegram token, admin IDs, and `OPENROUTER_API_KEY` in `.env`. OpenRouter serves `openai/text-embedding-3-small` embeddings. A compatible calibrated FAISS index is required at startup.
+Set the Telegram token, admin IDs, and `OPENAI_API_KEY` in `.env`. OpenAI serves `text-embedding-3-small` embeddings. A compatible calibrated FAISS index is required at startup.
 
 ## Model profiles
 
-`ACTIVE_MODEL_PROFILE` accepts one of two preconfigured names:
+`ACTIVE_MODEL_PROFILE` accepts one preconfigured name:
 
-- `openrouter`: OpenAI GPT-5 Nano reformulation and composition through OpenRouter, with the `kimi` profile as failover.
-- `kimi`: optional Kimi K2.6/K3 reformulation and composition through OpenRouter, with the `openrouter` profile as failover.
+- `openai`: GPT-5.6 Luna for reformulation and composition through the direct OpenAI-compatible API.
 
-All profiles use only the OpenRouter endpoint and key. Model names and routing behavior are fixed in code. Telegram users listed in `TELEGRAM_ADMIN_IDS` may inspect or switch the live profile with `/model` and `/model <profile>`. A batch keeps the profile selected when its debounce completes.
+Model names and routing behavior are fixed in code. Telegram users listed in `TELEGRAM_ADMIN_IDS` may inspect the active profile with `/model`. A batch keeps the selected profile snapshot when its debounce completes.
 
 ## Build retrieval artifacts
 
@@ -56,7 +55,7 @@ The current batch alone is embedded for the first global search:
 - A second weak result produces one focused clarification question.
 - A clarification reply is searched alone first; when weak, the unresolved query and reply are resolved together for one final search.
 - Remaining weak evidence produces fixed insufficient-information text.
-- Missing retrieval or exhausted providers produce fixed service-unavailable text.
+- Missing retrieval or exhausted OpenAI retries produce fixed service-unavailable text.
 - Provider retries repeat only the failed API call. Telegram delivery retries reuse the completed reply.
 
 Prior assistant replies and the model's own knowledge are never treated as evidence.

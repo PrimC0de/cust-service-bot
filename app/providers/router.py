@@ -61,7 +61,8 @@ class ProviderRouter:
                 if json_mode:
                     kwargs["response_format"] = {"type": "json_object"}
                 if max_tokens is not None:
-                    kwargs["max_tokens"] = max_tokens
+                    kwargs["max_completion_tokens"] = max_tokens
+                kwargs["reasoning_effort"] = "none"
                 response = await client.chat.completions.create(**kwargs)
                 content = response.choices[0].message.content
                 if not content or not content.strip():

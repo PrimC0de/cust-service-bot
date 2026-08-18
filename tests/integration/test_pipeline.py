@@ -14,7 +14,7 @@ from app.rag.generation import GenerationService
 from app.rag.pipeline import RAGPipeline
 
 
-PRIMARY = ModelProfileSnapshot("kimi", "rewrite", "compose", 2, "backup")
+PRIMARY = ModelProfileSnapshot("primary", "rewrite", "compose", 2, "backup")
 BACKUP = ModelProfileSnapshot("backup", "rewrite", "compose", 3)
 CHUNK = KnowledgeChunk(0, "KB fact", "KB fact", "cat", "sub", "source", "Doc", ("Section",))
 STRONG = (RetrievalHit(CHUNK, 0.8),)
@@ -74,7 +74,7 @@ class FakeRouter:
 
 class PipelineTests(unittest.IsolatedAsyncioTestCase):
     def pipeline(self, retriever, generation):
-        return RAGPipeline(retriever, generation, {"kimi": PRIMARY, "backup": BACKUP})
+        return RAGPipeline(retriever, generation, {"primary": PRIMARY, "backup": BACKUP})
 
     async def test_strong_current_message_composes_without_history_in_retrieval(self):
         retriever = FakeRetriever([STRONG])
@@ -87,7 +87,7 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
         )
         self.assertEqual(reply.kind, "answer")
         self.assertEqual(retriever.queries, ["How do I deposit USDT?"])
-        self.assertEqual(generation.calls, [("compose", "kimi")])
+        self.assertEqual(generation.calls, [("compose", "primary")])
 
     async def test_weak_retrieval_reformulates_once_then_composes(self):
         retriever = FakeRetriever([WEAK, STRONG])
@@ -97,7 +97,7 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
         )
         self.assertEqual(reply.kind, "answer")
         self.assertEqual(retriever.queries, ["two days", "rewritten query"])
-        self.assertEqual(generation.calls, [("reformulate", "kimi"), ("compose", "kimi")])
+        self.assertEqual(generation.calls, [("reformulate", "primary"), ("compose", "primary")])
 
     async def test_weak_retrieval_can_answer_from_explicit_user_history(self):
         retriever = FakeRetriever([WEAK])
@@ -113,7 +113,7 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(reply.text, "Your name is Alan.")
         self.assertEqual(reply.kind, "answer")
         self.assertEqual(retriever.queries, ["What is my name?"])
-        self.assertEqual(generation.calls, [("reformulate", "kimi")])
+        self.assertEqual(generation.calls, [("reformulate", "primary")])
 
     async def test_second_weak_result_asks_one_clarification(self):
         reply = await self.pipeline(FakeRetriever([WEAK, WEAK]), FakeGeneration()).run(
@@ -132,7 +132,7 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(reply.kind, "answer")
         self.assertEqual(retriever.queries[0], "withdrawal")
         self.assertEqual(retriever.queries[1], "rewritten query")
-        self.assertIn(("reformulate", "kimi"), generation.calls)
+        self.assertIn(("reformulate", "primary"), generation.calls)
 
     async def test_pending_clarification_stops_after_final_weak_result(self):
         pending = UnresolvedClarification("two days", "withdrawal duration", "For what?")
@@ -162,23 +162,23 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_composition_failover_reuses_retrieval(self):
         retriever = FakeRetriever([STRONG])
-        generation = FakeGeneration(fail_compose="kimi")
+        generation = FakeGeneration(fail_compose="primary")
         reply = await self.pipeline(retriever, generation).run(
             "question", (), PRIMARY, batch_id="b8"
         )
         self.assertEqual(reply.kind, "answer")
         self.assertEqual(len(retriever.queries), 1)
-        self.assertEqual(generation.calls, [("compose", "kimi"), ("compose", "backup")])
+        self.assertEqual(generation.calls, [("compose", "primary"), ("compose", "backup")])
 
     async def test_reformulation_failover_retries_only_reformulation(self):
-        generation = FakeGeneration(fail_reformulate="kimi")
+        generation = FakeGeneration(fail_reformulate="primary")
         reply = await self.pipeline(FakeRetriever([WEAK, STRONG]), generation).run(
             "fragment", (), PRIMARY, batch_id="b9"
         )
         self.assertEqual(reply.kind, "answer")
         self.assertEqual(
             generation.calls,
-            [("reformulate", "kimi"), ("reformulate", "backup"), ("compose", "kimi")],
+            [("reformulate", "primary"), ("reformulate", "backup"), ("compose", "primary")],
         )
 
 

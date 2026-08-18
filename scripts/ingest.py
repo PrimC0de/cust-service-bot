@@ -24,13 +24,12 @@ def ingest(settings: Settings, rebuild: bool) -> None:
         chunk_size=settings.chunk_size,
         chunk_overlap=settings.chunk_overlap,
     )
-    if not settings.openrouter_api_key:
-        raise RuntimeError("OPENROUTER_API_KEY is required for dense ingestion")
+    if not settings.openai_api_key:
+        raise RuntimeError("OPENAI_API_KEY is required for dense ingestion")
     cases = load_evaluation_cases(settings.retrieval_evaluation_path)
     print(f"Embedding {len(chunks)} chunks and {len(cases)} evaluation queries...", flush=True)
     client = AsyncOpenAI(
-        api_key=settings.openrouter_api_key,
-        base_url=settings.openrouter_base_url,
+        api_key=settings.openai_api_key,
         max_retries=0,
     )
     vectors = asyncio.run(

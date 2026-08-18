@@ -13,9 +13,11 @@ class FakeCompletions:
     def __init__(self, failures):
         self.failures = failures
         self.calls = 0
+        self.kwargs = []
 
-    async def create(self, **_kwargs):
+    async def create(self, **kwargs):
         self.calls += 1
+        self.kwargs.append(kwargs)
         if self.calls <= self.failures:
             raise RuntimeError("provider failure")
         message = SimpleNamespace(content="answer")
@@ -23,6 +25,22 @@ class FakeCompletions:
 
 
 class ProviderTests(unittest.IsolatedAsyncioTestCase):
+    async def test_luna_uses_direct_openai_completion_parameters(self):
+        completions = FakeCompletions(failures=0)
+        client = SimpleNamespace(chat=SimpleNamespace(completions=completions))
+        router = ProviderRouter(SimpleNamespace(for_profile=lambda _profile: client))
+        await router.text(
+            PROFILE,
+            "gpt-5.6-luna",
+            [{"role": "user", "content": "question"}],
+            batch_id="batch",
+            stage="compose",
+            max_tokens=50,
+        )
+        self.assertEqual(completions.kwargs[0]["max_completion_tokens"], 50)
+        self.assertEqual(completions.kwargs[0]["reasoning_effort"], "none")
+        self.assertNotIn("max_tokens", completions.kwargs[0])
+
     async def test_transient_errors_use_profile_attempt_count(self):
         completions = FakeCompletions(failures=2)
         client = SimpleNamespace(chat=SimpleNamespace(completions=completions))

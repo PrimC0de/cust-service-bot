@@ -23,12 +23,10 @@ class Settings:
     telegram_bot_token: str = os.getenv("TELEGRAM_BOT_TOKEN", "")
     telegram_admin_ids: frozenset[int] = _int_set(os.getenv("TELEGRAM_ADMIN_IDS", ""))
 
-    openrouter_api_key: str = os.getenv("OPENROUTER_API_KEY", "")
+    openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
+    initial_profile: str = os.getenv("ACTIVE_MODEL_PROFILE", "openai")
 
-    openrouter_base_url: str = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
-    initial_profile: str = os.getenv("ACTIVE_MODEL_PROFILE", "openrouter")
-
-    embedding_model: str = "openai/text-embedding-3-small"
+    embedding_model: str = "text-embedding-3-small"
     retrieval_top_k: int = 4
     embedding_batch_size: int = 100
 

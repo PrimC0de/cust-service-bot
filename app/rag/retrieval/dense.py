@@ -98,7 +98,7 @@ class DenseRetriever:
             except Exception as exc:
                 last_error = exc
                 logger.warning(
-                    "batch_id=%s stage=query_embedding profile=openrouter attempt=%d error_type=%s",
+                    "batch_id=%s stage=query_embedding profile=openai attempt=%d error_type=%s",
                     batch_id,
                     attempt + 1,
                     type(exc).__name__,
@@ -107,7 +107,7 @@ class DenseRetriever:
                     break
 
         logger.error(
-            "batch_id=%s stage=dense_retrieval profile=openrouter attempt=%d error_type=%s",
+            "batch_id=%s stage=dense_retrieval profile=openai attempt=%d error_type=%s",
             batch_id,
             attempt + 1,
             type(last_error).__name__,
