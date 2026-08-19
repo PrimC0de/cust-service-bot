@@ -13,3 +13,27 @@ I don’t intend to use this card, and I haven’t actually applied yet. If the 
 Decisive Evidence:
 The active issue concerns a card application and cancellation, which the current five intents do not cover.
 --------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: IN-04
+Predicted Sub-intent:
+Payment / Account Details
+Masked Customer Conversation (Chinese):
+English translation:
+Decisive Evidence:
+Get correct bank/account/payment destination.
+Typical customer phrasing:
+rek mana; nomor rekening; bank apa; kirim ke mana; rekening yang mana
+Expected bot behavior:
+Return account details only from approved backend/config; never invent or alter numbers.
+Backend / Tool Requirement:
+Approved payment destination/config service
+Escalate when:
+No valid destination, conflict with context, or transfer sent elsewhere.
+Success signal:
+Correct approved destination delivered
+Recommended RD Dialogue:
+“Siap bos, ini yang aktif: [PAYMENT_METHOD] — [PAYMENT_DESTINATION]. Transfer sesuai nominal ya, kalau udah kirim buktinya.”
+If unavailable: “Yang ini lagi nggak tersedia bos. Saya cek opsi yang aktif dulu ya.”
+Never type account numbers from memory; placeholders must come from system/config.
+--------------------------------------------------------------------------------

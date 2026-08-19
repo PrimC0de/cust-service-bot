@@ -101,3 +101,27 @@ Will a deposit take a long time right now?
 Decisive Evidence:
 The user asks generally about deposit timing without confirming a completed, failed, or uncredited transaction.
 --------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: IN-01
+Predicted Sub-intent: Top Up / Deposit
+Masked Customer Conversation (Chinese):
+English translation:
+Decisive Evidence:
+Add balance/credit quickly and know where/how much to transfer.
+Typical customer phrasing:
+topup; depo; isi saldo; mau masuk; rek mana; transfer kemana
+Expected bot behavior:
+Confirm amount if needed, return valid payment destination from system/config, ask for proof, then verify before success.
+Backend / Tool Requirement:
+Payment lookup; transaction creation; proof verification; fulfillment status
+Escalate when:
+Destination unavailable, amount mismatch, proof uncertain, or fulfillment unconfirmed.
+Success signal:
+Verified funds + fulfillment confirmed
+Recommended RD Dialogue:
+First: “Siap bos, mau top berapa?”
+If amount known: “Siap bos. Ini [PAYMENT_DESTINATION] yang aktif. Kalau udah transfer, kirim buktinya ya.”
+After proof: “Oke bos, bentar saya cek dulu.”
+Only after verified + fulfilled: “Udah masuk bos ✅”
+--------------------------------------------------------------------------------

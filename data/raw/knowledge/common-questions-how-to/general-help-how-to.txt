@@ -1,0 +1,16 @@
+General Help and How-to Questions
+
+## Intent
+
+The customer asks about a process, rule, requirement, limit, method, or next step. Typical wording includes: caranya gimana, minimal berapa, bisa pake bank apa, gimana prosesnya, and harus apa.
+
+## Response Rules
+
+Answer the exact question briefly using approved knowledge and current verified configuration. Use account context only when it is relevant and available.
+
+- Amount limits must come from approved current configuration.
+- Available payment methods must come from approved current configuration.
+- Process steps and platform rules must come from the knowledge base.
+- If the customer wants to continue, ask only for the next missing detail.
+
+Do not expose placeholders such as SYSTEM_MINIMUM, AVAILABLE_METHODS, or PAYMENT_DESTINATION to customers. If the requested value is unavailable or ambiguous, ask one focused question or say that it cannot be confirmed right now.

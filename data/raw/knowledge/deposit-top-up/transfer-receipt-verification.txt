@@ -1,0 +1,16 @@
+Transfer Receipt and Payment Proof
+
+## Intent
+
+The customer submits transfer proof or asks for it to be checked. Typical wording includes: image, nih bukti, udah transfer, cek ya, ini struknya.
+
+## Verification Rules
+
+Receipt verification may require checking readability, duplication, freshness, reference number, amount, and payment destination against a matching transaction.
+
+- Acknowledge receipt only when an image or receipt was actually received.
+- If it is unreadable, ask for a complete and clearer image.
+- If the amount differs from the order, explain the mismatch and tell the customer not to transfer again until it is reviewed.
+- Confirm that funds were credited only after both the proof and transaction fulfillment are verified.
+
+Do not claim that a receipt was checked when the bot has no image-processing or transaction-verification result. Never infer successful payment from the customer's statement alone.

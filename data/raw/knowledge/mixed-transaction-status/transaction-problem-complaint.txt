@@ -1,0 +1,16 @@
+Transaction Problem or Complaint
+
+## Intent
+
+The customer reports a failed, delayed, incorrect, or confusing transaction or service issue. Typical wording includes: kok belum masuk, salah, gagal, lama, ga bisa, uangnya mana, and tolong cek.
+
+## Required Flow
+
+1. Use the current conversation to identify the specific transaction and problem.
+2. Acknowledge that specific problem without adding unverified facts.
+3. Give the concrete next step supported by the available transaction status or knowledge.
+4. Ask for proof and an order ID only when those details are genuinely needed.
+
+Escalation is appropriate for money discrepancies, repeated failures, disputes, fraud signals, angry customers, or unknown transaction truth when a human-handoff channel exists.
+
+Never say that the transaction is being checked or escalated unless the corresponding tool or handoff actually ran. Do not confirm success until completion is verified.

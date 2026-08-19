@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 from app.models import (
     CompositionResult,
     ConversationExchange,
@@ -14,6 +16,13 @@ from app.models import (
 from app.providers.router import ProviderFailure
 from app.rag.generation import GenerationService, insufficient_response
 from app.rag.retrieval.dense import DenseRetriever
+
+
+ADDRESS_ONLY = re.compile(
+    r"^\s*(?:(?:hai|halo|hello|hi|hey)\s*[,!]*\s*)?"
+    r"(?P<term>bang|bos|boss|bro|kak|min|admin|gan|sis|mas|mbak)\s*[!?.,]*\s*$",
+    re.IGNORECASE,
+)
 
 
 class RAGPipeline:
@@ -39,6 +48,13 @@ class RAGPipeline:
         batch_id: str,
         unresolved: UnresolvedClarification | None = None,
     ) -> PipelineReply:
+        address = ADDRESS_ONLY.fullmatch(current)
+        if address:
+            return PipelineReply(
+                f"Siap, {address.group('term').lower()} 👋 Ada yang bisa dibantu?",
+                "answer",
+            )
+
         hits = await self.retriever.search(current, self.top_k, batch_id=batch_id)
         if self._strong(hits):
             return await self._compose_reply(

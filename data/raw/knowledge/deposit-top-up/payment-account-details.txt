@@ -1,0 +1,13 @@
+Payment Destination and Account Details
+
+## Intent
+
+The customer wants the correct bank account or payment destination. Typical wording includes: rek mana, nomor rekening, bank apa, kirim ke mana, and rekening yang mana.
+
+## Required Flow
+
+Return payment details only from approved current system or configuration data. Include the available payment method and destination, then remind the customer to transfer the correct amount and retain proof.
+
+Never invent, alter, reconstruct, or recall an account number from model memory. Old payment destinations must not be reused unless the system confirms that they remain active.
+
+If there is no verified active destination, say that the payment details cannot be confirmed right now. If the customer transferred elsewhere, do not ask them to transfer again until the mismatch is reviewed.

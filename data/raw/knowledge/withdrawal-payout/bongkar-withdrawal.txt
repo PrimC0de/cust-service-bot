@@ -1,0 +1,16 @@
+Bongkar or Withdrawal Request
+
+## Intent
+
+"Bongkar" may mean withdrawing, converting, or cashing out a balance. Similar wording includes tarik, WD, cairin, mau keluar, and proses bongkar.
+
+## Required Flow
+
+1. Identify the requested withdrawal amount.
+2. Collect only missing details such as member ID and the destination bank account or e-wallet.
+3. Submit or report a withdrawal status only when the relevant account, balance, eligibility, request, and fulfillment data are actually available.
+4. Confirm payment only after payout completion is confirmed.
+
+Do not claim to check, submit, process, or complete a withdrawal unless that action actually occurred. If the bot has no transaction tools or verified status, clearly say that it cannot confirm the withdrawal right now.
+
+Escalation is required for an account mismatch, insufficient balance, policy exception, or processing failure.

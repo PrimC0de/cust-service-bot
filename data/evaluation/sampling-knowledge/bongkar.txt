@@ -1,0 +1,30 @@
+================================================================================
+PREDICTED INTENT: Bongkar
+TOTAL SAMPLES: 1
+================================================================================
+
+--------------------------------------------------------------------------------
+Sample ID: IN-02
+Predicted Sub-intent:
+Bongkar / Withdrawal
+Masked Customer Conversation (Chinese):
+English translation:
+Decisive Evidence:
+Withdraw/convert balance and understand requirements/status.
+Typical customer phrasing:
+bongkar; tarik; wd; cairin; mau keluar; proses bongkar
+Expected bot behavior:
+Identify request, collect only missing required details, submit safely, and report actual status.
+Backend / Tool Requirement:
+Balance/account lookup; withdrawal request; eligibility checks; fulfillment status
+Escalate when:
+Account mismatch, insufficient balance, policy exception, or processing failure.
+Success signal:
+Withdrawal accepted and actual completion confirmed
+Recommended RD Dialogue:
+First: “Siap bos, bongkar berapa?”
+If details missing: “ID + nominal + rekening/e-wallet tujuan kirim ya.”
+After customer sends details/proof: “Oke bos, saya cek dulu ya.”
+If still pending: “Masih proses bos, belum selesai ya.”
+Only after payout confirmed: “Udah dibayar bos ✅”
+--------------------------------------------------------------------------------

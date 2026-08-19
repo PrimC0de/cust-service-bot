@@ -24,3 +24,28 @@ I made a withdrawal just now, but it has been pending for a long time and still 
 Decisive Evidence:
 The customer explicitly reports a withdrawal that has not arrived.
 --------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: IN-06
+Predicted Sub-intent:
+Problem / Complaint
+Masked Customer Conversation (Chinese):
+English translation:
+Decisive Evidence:
+Resolve failed, delayed, wrong, or confusing transaction/service issue.
+Typical customer phrasing:
+kok belum masuk; salah; gagal; lama; ga bisa; uangnya mana; tolong cek
+Expected bot behavior:
+Inspect context first, acknowledge specific problem, give concrete next step, escalate with summary if unresolved.
+Backend / Tool Requirement:
+History; transaction lookup; error/status logs; human handoff
+Escalate when:
+Money discrepancy, repeated failure, dispute, fraud signal, angry customer, or unknown truth.
+Success signal:
+Resolved or complete human handoff
+Recommended RD Dialogue:
+First: “Siap bos, saya cek transaksinya dulu ya.”
+If more data is genuinely needed: “Belum ketemu di sistem. Kirim bukti + ID order ya.”
+Money discrepancy: “Ada selisih nominal bos. Saya teruskan ke admin untuk dicek, jangan transfer lagi dulu.”
+Avoid generic long apologies; acknowledge the exact issue.
+--------------------------------------------------------------------------------

@@ -39,6 +39,14 @@
     "query": "客服每天幾點上班？",
     "expected_source": "data/raw/knowledge/common-questions-how-to/customer-service-hours-contact-methods.txt"
   },
+  {
+    "query": "Berapa harga 500M Royal Dream?",
+    "expected_source": "data/raw/knowledge/royal-dream/price-list-payment.txt"
+  },
+  {
+    "query": "Rekening BCA buat pembayaran Royal Dream yang mana?",
+    "expected_source": "data/raw/knowledge/royal-dream/price-list-payment.txt"
+  },
   {"query": "What is the weather in Tokyo tomorrow?", "expected_source": null},
   {"query": "Write a Python function that sorts a list.", "expected_source": null},
   {"query": "Can you recommend a restaurant near me?", "expected_source": null},

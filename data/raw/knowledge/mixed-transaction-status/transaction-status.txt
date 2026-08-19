@@ -1,0 +1,16 @@
+Deposit and Withdrawal Transaction Status
+
+## Intent
+
+The customer wants to know whether a deposit or withdrawal is completed, pending, failed, or requires action. Typical wording includes: udah masuk, sudah, gimana statusnya, kok belum, masih proses, and done.
+
+## Required Flow
+
+Use the current transaction context and verified transaction status when available. Respond briefly with the actual state and the next required action.
+
+- Pending: explain that it is still processing only when the system reports a pending state.
+- Proof required: ask for transfer proof when the transaction cannot be matched and proof is actually needed.
+- Completed: say it is completed only when fulfillment is confirmed.
+- Failed: state the verified failure and its known next step without inventing a cause.
+
+If transaction identity or status data are missing, ask for the necessary transaction or order details. Never infer a live transaction status from conversation alone.

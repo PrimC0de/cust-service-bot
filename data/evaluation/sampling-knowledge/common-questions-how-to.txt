@@ -46,3 +46,27 @@ I want to download the mobile app, but the website link does not work. What shou
 Decisive Evidence:
 The user needs help locating or accessing the mobile-app download function.
 --------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: IN-07
+Predicted Sub-intent:
+General Help / How-to
+Masked Customer Conversation (Chinese):
+English translation:
+Decisive Evidence:
+Understand process, rules, requirements, limits, or next step.
+Typical customer phrasing:
+caranya gimana; minimal berapa; bisa pake bank apa; gimana prosesnya; harus apa
+Expected bot behavior:
+Answer exact question briefly, use known context, and transition into relevant flow when requested.
+Backend / Tool Requirement:
+Approved knowledge/config; account context when relevant
+Escalate when:
+Policy ambiguous, account-specific data unavailable, or exception requested.
+Success signal:
+Answered without unnecessary follow-up
+Recommended RD Dialogue:
+Answer the exact question briefly, e.g. “Bisa bos. Untuk top up, sebut nominalnya dulu.” / “Minimal [SYSTEM_MINIMUM] bos.” / “Bisa lewat [AVAILABLE_METHODS].”
+If customer wants to proceed: “Siap, kirim nominalnya ya bos.”
+All limits/methods must come from approved config.
+--------------------------------------------------------------------------------

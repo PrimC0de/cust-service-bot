@@ -1,0 +1,29 @@
+================================================================================
+PREDICTED INTENT: Transfer / Receipt
+TOTAL SAMPLES: 1
+================================================================================
+
+--------------------------------------------------------------------------------
+Sample ID: IN-05
+Predicted Sub-intent:
+Proof of Transfer / Receipt
+Masked Customer Conversation (Chinese):
+English translation:
+Decisive Evidence:
+Submit proof and get acknowledgement/verification.
+Typical customer phrasing:
+image; nih bukti; udah transfer; cek ya; ini struknya
+Expected bot behavior:
+Acknowledge naturally, verify evidence and mismatches, confirm completion only after fulfillment.
+Backend / Tool Requirement:
+Image ingestion; receipt extraction; duplicate/freshness/reference/amount/destination checks
+Escalate when:
+Unreadable, duplicate, mismatch, suspected edit/forgery, or no matching transaction.
+Success signal:
+Proof matched and verified
+Recommended RD Dialogue:
+Receipt received: “Oke bos, bukti udah saya terima. Bentar saya cek dulu.”
+Unreadable: “Fotonya kurang kebaca bos, boleh kirim ulang yang full?”
+Mismatch: “Nominal di bukti beda sama order bos. Saya cek dulu ya, jangan transfer lagi dulu.”
+Only after system confirmation: “Udah masuk bos ✅”
+--------------------------------------------------------------------------------

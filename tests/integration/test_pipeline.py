@@ -76,6 +76,26 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
     def pipeline(self, retriever, generation):
         return RAGPipeline(retriever, generation, {"primary": PRIMARY, "backup": BACKUP})
 
+    async def test_address_only_message_skips_retrieval(self):
+        retriever = FakeRetriever([])
+        generation = FakeGeneration()
+        reply = await self.pipeline(retriever, generation).run(
+            "Halo, Bang!", (), PRIMARY, batch_id="b-address"
+        )
+        self.assertEqual(reply.text, "Siap, bang 👋 Ada yang bisa dibantu?")
+        self.assertEqual(retriever.queries, [])
+        self.assertEqual(generation.calls, [])
+
+    async def test_address_substring_is_not_treated_as_an_address(self):
+        retriever = FakeRetriever([STRONG])
+        generation = FakeGeneration()
+        reply = await self.pipeline(retriever, generation).run(
+            "Bosan nih", (), PRIMARY, batch_id="b-not-address"
+        )
+        self.assertEqual(reply.text, "grounded")
+        self.assertEqual(retriever.queries, ["Bosan nih"])
+        self.assertEqual(generation.calls, [("compose", "primary")])
+
     async def test_strong_current_message_composes_without_history_in_retrieval(self):
         retriever = FakeRetriever([STRONG])
         generation = FakeGeneration()
@@ -209,3 +229,15 @@ class GenerationTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result.text, "Your name is Alan.")
         self.assertIn("Facts explicitly stated by the user", router.messages[0]["content"])
         self.assertIn("Knowledge chunks:", router.messages[1]["content"])
+
+    async def test_composer_prompt_mirrors_only_clear_address_terms(self):
+        router = FakeRouter({"kind": "answer", "text": "Siap, bang."})
+        await GenerationService(router).compose(
+            PRIMARY, "Bang, bantu dong", (), STRONG, batch_id="b-tone"
+        )
+        prompt = router.messages[0]["content"]
+        self.assertIn("natural Gen-Z conversational style", prompt)
+        self.assertIn("imperfect grammar are allowed", prompt)
+        self.assertIn("Do not sound formal", prompt)
+        self.assertIn('"bosan" does not mean', prompt)
+        self.assertNotIn("Always address the customer", prompt)

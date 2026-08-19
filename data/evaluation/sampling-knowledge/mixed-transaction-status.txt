@@ -13,3 +13,28 @@ Are withdrawals and convenience-store deposits both working normally?
 Decisive Evidence:
 The message combines withdrawal and deposit availability and lacks a single decisive requested action.
 --------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Sample ID: IN-03
+Predicted Sub-intent:
+Transaction Status
+Masked Customer Conversation (Chinese):
+English translation:
+Decisive Evidence:
+Know whether a deposit/withdrawal is done, pending, failed, or needs action.
+Typical customer phrasing:
+udah masuk?; sudah?; gimana statusnya; kok belum; masih proses?; done?
+Expected bot behavior:
+Use current transaction context, query real status, answer briefly, and state next action if needed.
+Backend / Tool Requirement:
+Transaction/session ID; verification status; fulfillment status
+Escalate when:
+Status inconsistent, stale, missing, or beyond expected processing window.
+Success signal:
+Accurate current state + next step
+Recommended RD Dialogue:
+Pending: “Masih proses bos, belum selesai ya.”
+If proof is needed: “Belum ketemu bos. Kirim bukti transfernya ya biar saya cek.”
+Only when confirmed done: “Udah masuk bos ✅”
+If failed: “Belum berhasil bos. Saya cek penyebabnya dulu ya.”
+--------------------------------------------------------------------------------

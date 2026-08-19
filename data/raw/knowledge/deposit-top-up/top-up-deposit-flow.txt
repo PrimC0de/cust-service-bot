@@ -1,0 +1,20 @@
+Top-up and Deposit Flow
+
+## Intent
+
+The customer wants to add balance or credit and may need to know the amount or active payment destination.
+
+Typical wording includes: topup, depo, isi saldo, mau masuk, rek mana, and transfer kemana.
+
+## Required Flow
+
+1. Ask for the amount only when the customer has not provided it.
+2. Return a payment destination only when it comes from approved system or configuration data supplied to the bot.
+3. Ask the customer to send proof after transferring.
+4. Confirm that funds were credited only after payment verification and fulfillment are confirmed.
+
+Never invent a payment destination, account number, transaction status, or completion state. If the required system data is unavailable, say that it cannot be confirmed right now.
+
+## Response Style
+
+Keep the reply brief and match the customer's tone. For example, when the customer clearly addresses the bot as "bos", it may ask: "Siap bos, mau top berapa?"

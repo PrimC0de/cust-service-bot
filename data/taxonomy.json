@@ -76,6 +76,16 @@
           "slug": "withdrawal-and-deposit-service-availability",
           "name": "Withdrawal and deposit service availability",
           "classification_hint": "User asks whether deposit and/or withdrawal services are working normally right now, without a specific failed transaction."
+        },
+        {
+          "slug": "transaction-status",
+          "name": "Transaction status",
+          "classification_hint": "User asks whether a deposit or withdrawal is completed, pending, failed, or needs action."
+        },
+        {
+          "slug": "transaction-problem-complaint",
+          "name": "Transaction problem or complaint",
+          "classification_hint": "User reports a failed, delayed, incorrect, or confusing transaction or service problem."
         }
       ]
     },
@@ -122,6 +132,21 @@
           "slug": "unclassified-within-deposit",
           "name": "Unclassified within deposit",
           "classification_hint": "General deposit question that does not clearly fit other sub-intents, such as deposit timing or method confusion."
+        },
+        {
+          "slug": "top-up-deposit-flow",
+          "name": "Top-up and deposit flow",
+          "classification_hint": "User wants to add balance and needs the amount, payment destination, proof, or completion flow."
+        },
+        {
+          "slug": "payment-account-details",
+          "name": "Payment destination and account details",
+          "classification_hint": "User asks which bank account or payment destination to use."
+        },
+        {
+          "slug": "transfer-receipt-verification",
+          "name": "Transfer receipt and payment proof",
+          "classification_hint": "User submits a receipt or payment proof and wants acknowledgement or verification."
         }
       ]
     },
@@ -149,6 +174,11 @@
           "slug": "withdrawal-pending-not-received",
           "name": "Withdrawal pending / not received",
           "classification_hint": "User reports a withdrawal that is pending too long or has not arrived in their bank account."
+        },
+        {
+          "slug": "bongkar-withdrawal",
+          "name": "Bongkar or withdrawal request",
+          "classification_hint": "User wants to withdraw, convert, or cash out a balance using terms such as bongkar, tarik, WD, or cairin."
         }
       ]
     },
@@ -170,6 +200,22 @@
           "slug": "platform-navigation-feature-location",
           "name": "Platform navigation / feature location",
           "classification_hint": "User needs help finding a feature, downloading the app, or navigating the platform."
+        },
+        {
+          "slug": "general-help-how-to",
+          "name": "General help and how-to",
+          "classification_hint": "User asks about a process, rule, requirement, limit, method, or next step."
+        }
+      ]
+    },
+    {
+      "slug": "royal-dream",
+      "name": "Royal Dream",
+      "sub_intents": [
+        {
+          "slug": "price-list-payment",
+          "name": "Price list and payment",
+          "classification_hint": "User asks about Royal Dream prices, payment destinations, QRIS, confirmation, or transfer-proof rules."
         }
       ]
     }
