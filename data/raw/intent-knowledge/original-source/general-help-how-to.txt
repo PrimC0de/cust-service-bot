@@ -1,0 +1,59 @@
+General Help / How-to Intent Playbook
+
+Intent ID: INT_GENERAL_HELP
+Priority: P1
+Source type: Observed frontliner-derived taxonomy
+
+## Retrieval Profile
+
+Customer goal: Understand process, rules, requirements, limits, or next step.
+Classification cues: caranya gimana; minimal berapa; bisa pake bank apa; gimana prosesnya; harus apa
+Semantic retrieval text: Intent: General Help / How-to. Customer goal: Understand process, rules, requirements, limits, or next step. Typical phrases: caranya gimana; minimal berapa; bisa pake bank apa; gimana prosesnya; harus apa. Meaning: customer asks how something works, requirements, limits, supported methods, or next steps.
+
+## Customer Utterance Examples
+
+- caranya gimana — customer asks how something works, requirements, limits, supported methods, or next steps
+- minimal berapa — customer asks how something works, requirements, limits, supported methods, or next steps
+- bisa pake bank apa — customer asks how something works, requirements, limits, supported methods, or next steps
+- gimana prosesnya — customer asks how something works, requirements, limits, supported methods, or next steps
+- harus apa — customer asks how something works, requirements, limits, supported methods, or next steps
+
+## Required Context and Routing
+
+Required context or entities: exact question; relevant approved knowledge/config; account context only when needed
+Default bot action: Answer exact question briefly, use known context, and transition into relevant flow when requested.
+Backend or tool requirement: Approved knowledge/config; account context when relevant
+Escalation triggers: Policy ambiguous, account-specific data unavailable, or exception requested.
+Success signal: Answered without unnecessary follow-up
+
+## Behavior Rules
+
+### Known factual/config question
+Required action: Answer exactly and briefly from approved knowledge/config.
+Do not: Do not invent limits, methods, or rules.
+Required data or tool: Approved knowledge/config
+Escalate if: Policy ambiguous or exception requested
+Example response: “Bisa bos. Untuk top up, sebut nominalnya dulu.”
+
+### Customer wants to proceed
+Required action: Transition into the relevant transaction flow.
+Do not: Do not ask unrelated follow-up questions.
+Required data or tool: Relevant flow/context
+Example response: “Siap, kirim nominalnya ya bos.”
+
+## Ambiguity Guidance
+
+### Compared with Payment / Account Details (INT_PAYMENT_DETAILS)
+Why they overlap: “bisa pake bank apa” is informational while “rek mana” asks for a live destination.
+Prefer this intent when: User asks supported methods or general process.
+Prefer Payment / Account Details when: User asks for the current active destination/account to send money to.
+Context to check: Question asks capability vs specific live destination
+Classifier guidance: General Help uses approved knowledge; Payment Details requires live config/backend.
+
+## Response Style Examples
+
+Answer the exact question briefly, e.g. “Bisa bos. Untuk top up, sebut nominalnya dulu.” / “Minimal [SYSTEM_MINIMUM] bos.” / “Bisa lewat [AVAILABLE_METHODS].”
+If customer wants to proceed: “Siap, kirim nominalnya ya bos.”
+All limits/methods must come from approved config.
+
+Dialogue examples guide tone and behavior only. They are not proof of live status or factual truth. Live facts must come from approved configuration or backend tools.

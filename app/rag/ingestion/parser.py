@@ -82,18 +82,17 @@ def parse_document(path: Path, knowledge_dir: Path) -> ParsedDocument:
 
 def parse_documents(
     knowledge_dir: Path,
-    taxonomy_path: Path,
+    taxonomy_path: Path | None = None,
 ) -> list[ParsedDocument]:
-    valid = load_taxonomy(taxonomy_path)
+    valid = load_taxonomy(taxonomy_path) if taxonomy_path else None
     documents: list[ParsedDocument] = []
     for path in sorted(knowledge_dir.rglob("*")):
         if not path.is_file() or path.suffix.lower() not in {".md", ".txt"}:
             continue
         key = (path.parent.name, path.stem)
-        if key not in valid:
+        if valid is not None and key not in valid:
             raise ValueError(f"Knowledge document is absent from taxonomy: {path}")
         documents.append(parse_document(path, knowledge_dir))
     if not documents:
         raise ValueError(f"No knowledge documents found in {knowledge_dir}")
     return documents
-

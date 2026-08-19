@@ -1,0 +1,89 @@
+Intent Catalog
+
+## INT_WITHDRAWAL
+intent_name: Bongkar / Withdrawal
+intent_description: Customer wants to withdraw or convert balance, or asks about bongkar requirements and rates.
+customer_goal: Withdraw balance safely and understand the required details, destination, rate, or status.
+action_type: action-request
+required_context: Amount, customer/account ID, destination account or e-wallet, eligibility, and transaction context.
+required_entities: amount; customer_id; account_name; destination; payment_method; account_holder_name
+possible_next_actions: Ask only for missing details; provide approved bongkar instructions; submit through the approved workflow; report verified status.
+escalation_conditions: Account mismatch; insufficient balance; policy exception; processing failure.
+notes: Approved supplied facts include minimum 1B, destination ID 405060 / Coin House2, X60/B, and X55/B without an order.
+
+## INT_GENERAL_HELP
+intent_name: General Help / How-to
+intent_description: Customer asks how a process works, what is supported, or what is required.
+customer_goal: Understand a process, requirement, limit, method, or next step.
+action_type: information-request
+required_context: Exact topic and approved knowledge or configuration.
+required_entities: topic
+possible_next_actions: Answer the exact approved fact; transition into the relevant flow if requested.
+escalation_conditions: Ambiguous policy; unavailable account-specific data; exception request.
+notes: Do not treat placeholders or frontliner examples as approved facts.
+
+## INT_PAYMENT_DETAILS
+intent_name: Payment / Account Details
+intent_description: Customer asks for the currently approved bank, account, or payment destination.
+customer_goal: Obtain the correct active destination before transferring.
+action_type: information-request
+required_context: Requested payment method and active approved destination.
+required_entities: payment_method
+possible_next_actions: Return an approved active destination; check another approved option if unavailable.
+escalation_conditions: No valid destination; conflicting context; transfer sent elsewhere.
+notes: Generic payment destinations require live approved configuration. Never reconstruct numbers from memory.
+
+## INT_COMPLAINT
+intent_name: Problem / Complaint
+intent_description: Customer reports a failed, delayed, incorrect, confusing, or disputed transaction or service result.
+customer_goal: Resolve the specific problem and receive a concrete next step.
+action_type: complaint
+required_context: Conversation history, transaction ID, actual status or error logs, and evidence when needed.
+required_entities: transaction_id; problem_description
+possible_next_actions: Inspect context; request only missing evidence; resolve or escalate with a concise summary.
+escalation_conditions: Money discrepancy; repeated failure; dispute; fraud signal; angry customer; unknown truth.
+notes: A generic status question is not automatically a complaint.
+
+## INT_PROOF_TRANSFER
+intent_name: Proof of Transfer / Receipt
+intent_description: Customer submits or refers to payment evidence for acknowledgement and verification.
+customer_goal: Have a receipt or transfer proof matched and verified.
+action_type: confirmation
+required_context: Receipt or image, transaction reference, amount, destination, and freshness or duplicate indicators.
+required_entities: receipt; transaction_reference; amount; destination
+possible_next_actions: Acknowledge receipt; verify it; request a clearer image; investigate mismatch.
+escalation_conditions: Unreadable or duplicate proof; mismatch; suspected edit or forgery; no matching transaction.
+notes: Never confirm payment completion before verified fulfillment.
+
+## INT_ROYAL_DREAM_PRICELIST
+intent_name: Royal Dream Pricelist and Payment
+intent_description: Customer asks for approved Royal Dream prices, payment destinations, QRIS, or payment rules.
+customer_goal: Obtain an exact approved Royal Dream price or payment instruction.
+action_type: information-request
+required_context: Requested quantity or payment method.
+required_entities: quantity; payment_method
+possible_next_actions: Return the exact supplied price or destination; ask for quantity when the 20B–99B calculation is unclear.
+escalation_conditions: Requested fact is absent, ambiguous, or conflicts with the approved source.
+notes: Approved supplied facts are maintained in behavior-rules.txt; preserve all account numbers and rate notation exactly.
+
+## INT_TOPUP
+intent_name: Top Up / Deposit
+intent_description: Customer wants to add balance or begin a deposit/top-up flow.
+customer_goal: Add balance and learn how much or where to transfer as part of the active flow.
+action_type: action-request
+required_context: Amount, active payment destination, transaction context, and proof when available.
+required_entities: amount
+possible_next_actions: Ask the amount; obtain an approved destination; request and verify proof.
+escalation_conditions: Destination unavailable; amount mismatch; uncertain proof; unconfirmed fulfillment.
+notes: Asking only for a live account destination may be INT_PAYMENT_DETAILS instead.
+
+## INT_TX_STATUS
+intent_name: Transaction Status
+intent_description: Customer asks whether an identifiable transaction is complete, pending, failed, or still processing.
+customer_goal: Obtain the accurate current state and next required action.
+action_type: status-request
+required_context: Current transaction/session or sufficiently clear conversation context and verified fulfillment status.
+required_entities: transaction_id_or_active_context
+possible_next_actions: Query status; report pending, completed, or failed accurately; request proof only when needed.
+escalation_conditions: Status inconsistent, stale, missing, or beyond the approved processing window.
+notes: Failure or dispute framing may indicate INT_COMPLAINT instead.

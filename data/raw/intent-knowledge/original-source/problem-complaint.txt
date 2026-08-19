@@ -1,0 +1,70 @@
+Problem / Complaint Intent Playbook
+
+Intent ID: INT_COMPLAINT
+Priority: P0
+Source type: Observed frontliner-derived taxonomy
+
+## Retrieval Profile
+
+Customer goal: Resolve failed, delayed, wrong, or confusing transaction/service issue.
+Classification cues: kok belum masuk; salah; gagal; lama; ga bisa; uangnya mana; tolong cek
+Semantic retrieval text: Intent: Problem / Complaint. Customer goal: Resolve failed, delayed, wrong, or confusing transaction/service issue. Typical phrases: kok belum masuk; salah; gagal; lama; ga bisa; uangnya mana; tolong cek. Meaning: customer reports a failed, delayed, incorrect, confusing, or unresolved service/transaction issue.
+
+## Customer Utterance Examples
+
+- kok belum masuk — customer reports a failed, delayed, incorrect, confusing, or unresolved service/transaction issue
+- salah — customer reports a failed, delayed, incorrect, confusing, or unresolved service/transaction issue
+- gagal — customer reports a failed, delayed, incorrect, confusing, or unresolved service/transaction issue
+- lama — customer reports a failed, delayed, incorrect, confusing, or unresolved service/transaction issue
+- ga bisa — customer reports a failed, delayed, incorrect, confusing, or unresolved service/transaction issue
+- uangnya mana — customer reports a failed, delayed, incorrect, confusing, or unresolved service/transaction issue
+- tolong cek — customer reports a failed, delayed, incorrect, confusing, or unresolved service/transaction issue
+
+## Required Context and Routing
+
+Required context or entities: conversation/transaction history; transaction ID; error/status logs; evidence when needed
+Default bot action: Inspect context first, acknowledge specific problem, give concrete next step, escalate with summary if unresolved.
+Backend or tool requirement: History; transaction lookup; error/status logs; human handoff
+Escalation triggers: Money discrepancy, repeated failure, dispute, fraud signal, angry customer, or unknown truth.
+Success signal: Resolved or complete human handoff
+
+## Behavior Rules
+
+### Complaint received
+Required action: Inspect transaction/context first; acknowledge the specific issue.
+Do not: Avoid generic long apologies or unsupported conclusions.
+Required data or tool: History + transaction lookup + logs
+Escalate if: Money discrepancy, repeated failure, dispute, fraud signal, angry customer, unknown truth
+Example response: “Siap bos, saya cek transaksinya dulu ya.”
+
+### Required evidence missing
+Required action: Ask only for genuinely needed evidence/ID.
+Do not: Do not over-collect data.
+Required data or tool: Transaction lookup
+Escalate if: Cannot resolve after evidence
+Example response: “Belum ketemu di sistem. Kirim bukti + ID order ya.”
+
+### Money discrepancy
+Required action: Escalate with a concise summary and prevent duplicate payment.
+Do not: Do not guess where money went.
+Required data or tool: Human handoff + transaction evidence
+Escalate if: Always for unresolved discrepancy
+Example response: “Ada selisih nominal bos. Saya teruskan ke admin untuk dicek, jangan transfer lagi dulu.”
+
+## Ambiguity Guidance
+
+### Compared with Transaction Status (INT_TX_STATUS)
+Why they overlap: Both may contain “kok belum”, “lama”, or missing-funds language.
+Prefer this intent when: User emphasizes failure, wrong result, repeated problem, dispute, or asks for resolution.
+Prefer Transaction Status when: User primarily asks for current state of an identifiable transaction.
+Context to check: Previous transaction turn; transaction ID; error history; emotional/problem framing
+Classifier guidance: Use conversation context first. If there is an unresolved defect or dispute beyond status, choose Complaint.
+
+## Response Style Examples
+
+First: “Siap bos, saya cek transaksinya dulu ya.”
+If more data is genuinely needed: “Belum ketemu di sistem. Kirim bukti + ID order ya.”
+Money discrepancy: “Ada selisih nominal bos. Saya teruskan ke admin untuk dicek, jangan transfer lagi dulu.”
+Avoid generic long apologies; acknowledge the exact issue.
+
+Dialogue examples guide tone and behavior only. They are not proof of live status or factual truth. Live facts must come from approved configuration or backend tools.

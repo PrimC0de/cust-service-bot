@@ -66,10 +66,10 @@ class GenerationService:
     ) -> CompositionResult:
         if not hits:
             raise ProviderFailure("No grounded chunks were selected for composition")
+        unique_hits = {hit.chunk.sub_category: hit for hit in hits}.values()
         context = "\n\n".join(
-            f"--- {hit.chunk.document_title} > {' > '.join(hit.chunk.section_path)} ---\n"
-            f"{hit.chunk.text}"
-            for hit in hits
+            f"--- {hit.chunk.document_title} ---\n{hit.chunk.text}"
+            for hit in unique_hits
         )
         data = await self.router.json(
             profile,

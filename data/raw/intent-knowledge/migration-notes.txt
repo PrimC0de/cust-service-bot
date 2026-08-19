@@ -1,0 +1,29 @@
+Migration Notes
+
+## Scope
+The eight original intent playbooks are preserved unchanged under original-source/.
+
+## Structural Changes
+- intent-catalog.txt contains one canonical record per intent.
+- atomic-utterance-examples.txt contains one independently retrievable customer utterance per row.
+- behavior-rules.txt separates operational behavior and approved facts from utterance examples.
+- ambiguity-map.txt records near-neighbor intent pairs and their disambiguating signals.
+- knowledge-gaps.txt separates unknown, live, or unverified facts from authoritative knowledge.
+
+## Atomic Example Counts
+- INT_WITHDRAWAL: 11
+- INT_GENERAL_HELP: 5
+- INT_PAYMENT_DETAILS: 5
+- INT_COMPLAINT: 7
+- INT_PROOF_TRANSFER: 5
+- INT_ROYAL_DREAM_PRICELIST: 15
+- INT_TOPUP: 6
+- INT_TX_STATUS: 6
+- Total: 60
+
+## Migration Rules
+- Exact duplicates within the same intent were removed.
+- The duplicate phrase "rek mana" remains under INT_TOPUP and INT_PAYMENT_DETAILS intentionally because it is a documented ambiguity, not weighting duplication.
+- Ambiguous or continuation-style examples are marked requires_context=true.
+- Dialogue examples and observed frontliner behavior are not promoted into authoritative business facts.
+- Approved Royal Dream and bongkar facts remain explicit behavior rules with their original notation preserved.

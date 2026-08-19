@@ -1,0 +1,81 @@
+Transaction Status Intent Playbook
+
+Intent ID: INT_TX_STATUS
+Priority: P0
+Source type: Observed frontliner-derived taxonomy
+
+## Retrieval Profile
+
+Customer goal: Know whether a deposit/withdrawal is done, pending, failed, or needs action.
+Classification cues: udah masuk?; sudah?; gimana statusnya; kok belum; masih proses?; done?
+Semantic retrieval text: Intent: Transaction Status. Customer goal: Know whether a deposit/withdrawal is done, pending, failed, or needs action. Typical phrases: udah masuk?; sudah?; gimana statusnya; kok belum; masih proses?; done?. Meaning: customer asks whether an existing transaction is complete, pending, failed, or still processing.
+
+## Customer Utterance Examples
+
+- udah masuk? — customer asks whether an existing transaction is complete, pending, failed, or still processing
+- sudah? — customer asks whether an existing transaction is complete, pending, failed, or still processing
+- gimana statusnya — customer asks whether an existing transaction is complete, pending, failed, or still processing
+- kok belum — customer asks whether an existing transaction is complete, pending, failed, or still processing
+- masih proses? — customer asks whether an existing transaction is complete, pending, failed, or still processing
+- done? — customer asks whether an existing transaction is complete, pending, failed, or still processing
+
+## Required Context and Routing
+
+Required context or entities: current transaction/session ID or sufficiently clear conversation context; actual verification/fulfillment status
+Default bot action: Use current transaction context, query real status, answer briefly, and state next action if needed.
+Backend or tool requirement: Transaction/session ID; verification status; fulfillment status
+Escalation triggers: Status inconsistent, stale, missing, or beyond expected processing window.
+Success signal: Accurate current state + next step
+
+## Behavior Rules
+
+### Status = pending
+Required action: Report pending status briefly.
+Do not: Do not imply completion.
+Required data or tool: Transaction/session status
+Example response: “Masih proses bos, belum selesai ya.”
+
+### Proof required / transaction not found
+Required action: Request proof only when genuinely needed.
+Do not: Do not fabricate status.
+Required data or tool: Transaction lookup
+Escalate if: Status stale, missing, or inconsistent
+Example response: “Belum ketemu bos. Kirim bukti transfernya ya biar saya cek.”
+
+### Status = completed
+Required action: Confirm only after actual completion is verified.
+Do not: Do not confirm from conversation wording alone.
+Required data or tool: Verified fulfillment status
+Example response: “Udah masuk bos ✅”
+
+### Status = failed
+Required action: State failure and next check/action.
+Do not: Do not guess the cause.
+Required data or tool: Transaction/error status
+Escalate if: Cause unknown or beyond expected window
+Example response: “Belum berhasil bos. Saya cek penyebabnya dulu ya.”
+
+## Ambiguity Guidance
+
+### Compared with Problem / Complaint (INT_COMPLAINT)
+Why they overlap: Both may contain “kok belum”, “lama”, or missing-funds language.
+Prefer this intent when: User primarily asks for current state of an identifiable transaction.
+Prefer Problem / Complaint when: User emphasizes failure, wrong result, repeated problem, dispute, or asks for resolution.
+Context to check: Previous transaction turn; transaction ID; error history; emotional/problem framing
+Classifier guidance: Use conversation context first. If there is an unresolved defect or dispute beyond status, choose Complaint.
+
+### Compared with Proof of Transfer / Receipt (INT_PROOF_TRANSFER)
+Why they overlap: “udah transfer” may be either a proof submission or a status check.
+Prefer this intent when: User asks whether it has arrived/completed without providing evidence.
+Prefer Proof of Transfer / Receipt when: User attaches/sends receipt or asks to verify evidence.
+Context to check: Attachment presence; previous bot request for proof; explicit “cek bukti” wording
+Classifier guidance: Attachment/request-for-verification strongly favors Proof of Transfer.
+
+## Response Style Examples
+
+Pending: “Masih proses bos, belum selesai ya.”
+If proof is needed: “Belum ketemu bos. Kirim bukti transfernya ya biar saya cek.”
+Only when confirmed done: “Udah masuk bos ✅”
+If failed: “Belum berhasil bos. Saya cek penyebabnya dulu ya.”
+
+Dialogue examples guide tone and behavior only. They are not proof of live status or factual truth. Live facts must come from approved configuration or backend tools.

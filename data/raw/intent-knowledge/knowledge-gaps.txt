@@ -1,0 +1,12 @@
+Knowledge Gaps
+
+Format: knowledge_key | description | status | source_required | risk_if_invented | notes
+
+GAP_ACTIVE_GENERIC_DESTINATION | Current active generic top-up/payment bank or account destination | unverified | approved live configuration | customer sends funds to the wrong destination | Royal Dream destinations are separately approved and must not be generalized
+GAP_GENERIC_MINIMUM | Generic platform top-up or deposit minimum | unverified | approved product configuration | incorrect limit given to customer | Bongkar minimum 1B is separately supplied and approved
+GAP_AVAILABLE_METHODS | Generic list of supported banks, e-wallets, or payment methods | unverified | approved live configuration | unsupported method promised | do not derive this from dialogue examples
+GAP_LIVE_TRANSACTION_STATUS | Current status of any individual transaction | runtime-only | transaction or fulfillment backend | false completion or failure claim | conversation wording is not proof
+GAP_EXPECTED_PROCESSING_WINDOW | Normal processing time for generic deposit, withdrawal, or complaint flows | unverified | approved operations policy | premature escalation or false reassurance | the supplied six-hour bongkar rejection rule is not a generic processing SLA
+GAP_ACCOUNT_ELIGIBILITY | Current balance and eligibility for withdrawal | runtime-only | account and eligibility backend | invalid withdrawal acceptance | never infer from requested amount
+GAP_PROOF_VALIDITY | Whether a submitted receipt is readable, fresh, unique, and matched | runtime-only | image and transaction verification | fraud, duplicate payment, or false confirmation | Royal Dream includes a supplied 30-minute proof rule
+GAP_HUMAN_HANDOFF | Actual human escalation channel and availability | unverified | approved support configuration | unsupported promise of human assistance | no redirect should be invented

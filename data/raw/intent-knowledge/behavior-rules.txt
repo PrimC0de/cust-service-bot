@@ -1,0 +1,40 @@
+Behavior Rules
+
+Format: rule_id | intent_id | condition | required_action | prohibited_action | required_information | tool_requirement | escalation_condition | priority
+
+RULE_WITHDRAWAL_001 | INT_WITHDRAWAL | amount missing | ask the withdrawal amount | do not infer an amount | amount | conversation context | none | P0
+RULE_WITHDRAWAL_002 | INT_WITHDRAWAL | required details missing | request only missing ID, account name, amount, destination, payment method, and account-holder name | do not collect unrelated sensitive data | missing withdrawal fields | account and eligibility lookup | account mismatch or insufficient balance | P0
+RULE_WITHDRAWAL_003 | INT_WITHDRAWAL | approved bongkar instructions requested | state minimum 1B and destination ID 405060 / Coin House2 exactly | do not alter the ID or minimum | requested instruction | approved source | conflicting instruction | P0
+RULE_WITHDRAWAL_004 | INT_WITHDRAWAL | rate requested | state X60/B; without an order state X55/B | do not infer another calculation | applicable order context | approved source | unclear applicable rate | P0
+RULE_WITHDRAWAL_005 | INT_WITHDRAWAL | invalid submission | do not process wrong sender ID, wrong amount, retail/eceran amount, wrong destination, or submission older than six hours | do not claim acceptance | submission details and timestamp | transaction workflow | any invalid condition | P0
+RULE_WITHDRAWAL_006 | INT_WITHDRAWAL | submitted or processing | report only actual backend status | do not claim payout complete while pending | transaction status | withdrawal and fulfillment status | policy exception or processing failure | P0
+
+RULE_GENERAL_001 | INT_GENERAL_HELP | approved factual question | answer the exact question briefly from approved knowledge | do not invent limits, methods, or rules | exact topic | approved knowledge or config | ambiguous policy or exception | P1
+RULE_GENERAL_002 | INT_GENERAL_HELP | customer wants to proceed | transition into the relevant transaction flow | do not ask unrelated follow-ups | relevant flow and context | relevant workflow | unavailable required flow | P1
+
+RULE_PAYMENT_001 | INT_PAYMENT_DETAILS | destination requested | return only an approved active destination | never invent, alter, or recall account numbers from memory | payment method | approved destination service | no valid or conflicting destination | P0
+RULE_PAYMENT_002 | INT_PAYMENT_DETAILS | requested destination unavailable | check another approved active option | do not provide a stale destination | requested method | approved config | no approved alternative | P0
+
+RULE_COMPLAINT_001 | INT_COMPLAINT | complaint received | inspect context and acknowledge the specific issue | avoid generic apologies and unsupported conclusions | transaction and problem context | history, lookup, and logs | discrepancy, dispute, fraud, repeated failure, anger, or unknown truth | P0
+RULE_COMPLAINT_002 | INT_COMPLAINT | evidence missing | request only genuinely needed evidence or ID | do not over-collect data | missing evidence | transaction lookup | unresolved after evidence | P0
+RULE_COMPLAINT_003 | INT_COMPLAINT | money discrepancy | prevent duplicate payment and escalate with a concise summary | do not guess where the money went | transaction evidence | human handoff | always when discrepancy remains unresolved | P0
+
+RULE_PROOF_001 | INT_PROOF_TRANSFER | receipt received | acknowledge and verify against the matching transaction | do not confirm completion before backend confirmation | receipt and transaction reference | image and transaction verification | no matching transaction | P0
+RULE_PROOF_002 | INT_PROOF_TRANSFER | receipt unreadable | request a clearer full image | do not infer unreadable values | readable receipt | image ingestion | repeated unreadable evidence | P0
+RULE_PROOF_003 | INT_PROOF_TRANSFER | receipt mismatch | stop repeat payment and investigate | do not ask the customer to transfer again | amount, destination, and reference | verification checks | mismatch, duplicate, or suspected forgery | P0
+
+RULE_ROYAL_001 | INT_ROYAL_DREAM_PRICELIST | price requested | return exactly 100M=8K, 200M=15K, 300M=21K, 400M=28K, 500M=35K, 600M=42K, 700M=49K, 800M=55K, 900M=60K, or 1B=65K | do not invent another price | requested quantity | approved supplied source | quantity absent from list | P0
+RULE_ROYAL_002 | INT_ROYAL_DREAM_PRICELIST | 20B–99B rate requested | preserve the supplied notation x64K and ask for quantity when total is unclear | do not infer a different calculation | desired quantity | approved supplied source | intended total unclear | P0
+RULE_ROYAL_003 | INT_ROYAL_DREAM_PRICELIST | payment destination requested | return exactly BCA 0322745611 Toni, SeaBank 901468161964 Toni, or BRI 03210109 4418508 Toni as applicable | never alter or reconstruct account numbers | payment method | approved supplied source | conflicting destination | P0
+RULE_ROYAL_004 | INT_ROYAL_DREAM_PRICELIST | QRIS requested | state that QRIS is available and the customer must ask admin for the current QRIS | do not invent QRIS data | none | admin | current QRIS unavailable | P0
+RULE_ROYAL_005 | INT_ROYAL_DREAM_PRICELIST | before payment | require confirmation before transfer and clear detailed proof afterward | do not confirm success from customer wording alone | confirmation and proof | proof and fulfillment verification | mismatch or unverified fulfillment | P0
+RULE_ROYAL_006 | INT_ROYAL_DREAM_PRICELIST | proof sent more than 30 minutes later | state that the supplied rule marks it expired | do not claim it remains valid | proof timestamp | proof verification | timestamp disputed or unknown | P0
+
+RULE_TOPUP_001 | INT_TOPUP | amount missing | ask for the amount | do not invent amount or destination | amount | conversation context | none | P0
+RULE_TOPUP_002 | INT_TOPUP | amount known | obtain and return only an approved active destination, then request proof | do not type a destination from memory | amount and payment method | approved destination service | destination unavailable or conflicting | P0
+RULE_TOPUP_003 | INT_TOPUP | proof received | verify proof and fulfillment | do not confirm credited balance before verification | proof and transaction context | proof and fulfillment status | mismatch, uncertainty, or unconfirmed fulfillment | P0
+
+RULE_STATUS_001 | INT_TX_STATUS | status pending | report pending briefly | do not imply completion | transaction status | transaction lookup | stale or inconsistent status | P0
+RULE_STATUS_002 | INT_TX_STATUS | proof required or transaction absent | request proof only when genuinely needed | do not fabricate status | transaction reference or proof | transaction lookup | missing or inconsistent status | P0
+RULE_STATUS_003 | INT_TX_STATUS | status completed | confirm only after actual fulfillment is verified | do not confirm from wording alone | verified fulfillment | fulfillment status | inconsistent completion | P0
+RULE_STATUS_004 | INT_TX_STATUS | status failed | state failure and the next check without guessing the cause | do not invent a cause | error status | transaction and error lookup | cause unknown or beyond approved window | P0

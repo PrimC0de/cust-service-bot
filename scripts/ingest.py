@@ -8,9 +8,8 @@ import asyncio
 from openai import AsyncOpenAI
 
 from app.config.settings import Settings
-from app.rag.ingestion.chunker import chunk_documents
+from app.rag.ingestion.chunker import load_atomic_intent_chunks
 from app.rag.ingestion.indexer import build_indexes, embed_texts, load_evaluation_cases
-from app.rag.ingestion.parser import parse_documents
 
 
 def ingest(settings: Settings, rebuild: bool) -> None:
@@ -18,12 +17,7 @@ def ingest(settings: Settings, rebuild: bool) -> None:
         print("Indexes already exist. Use --rebuild to replace them.")
         return
 
-    documents = parse_documents(settings.knowledge_dir, settings.taxonomy_path)
-    chunks = chunk_documents(
-        documents,
-        chunk_size=settings.chunk_size,
-        chunk_overlap=settings.chunk_overlap,
-    )
+    chunks = load_atomic_intent_chunks(settings.knowledge_dir)
     if not settings.openai_api_key:
         raise RuntimeError("OPENAI_API_KEY is required for dense ingestion")
     cases = load_evaluation_cases(settings.retrieval_evaluation_path)
@@ -49,7 +43,8 @@ def ingest(settings: Settings, rebuild: bool) -> None:
         vectors=vectors,
     )
     print(
-        f"Indexed {len(chunks)} chunks from {len(documents)} documents "
+        f"Indexed {len(chunks)} atomic examples across "
+        f"{len({chunk.sub_category for chunk in chunks})} intents "
         f"(dense, confidence threshold {manifest['confidence_threshold']:.4f})."
     )
 

@@ -1,0 +1,59 @@
+Royal Dream Pricelist and Payment Intent Playbook
+
+Intent ID: INT_ROYAL_DREAM_PRICELIST
+Priority: P0
+Source type: Approved supplied knowledge
+
+## Retrieval Profile
+
+Customer goal: Ask for Royal Dream prices, payment accounts, QRIS, or payment rules.
+Classification cues: harga royal dream; pricelist royal dream; harga 100m; harga 500m; harga 1b; rate 20b; rekening royal dream; bayar royal dream; qris royal dream
+
+## Customer Utterance Examples
+
+- berapa harga 100m
+- harga 500m berapa
+- pricelist royal dream
+- rate 20b berapa
+- rekening bca royal dream
+- royal dream bisa bayar pakai apa
+- minta qris royal dream
+
+## Price List
+
+- 100M = 8K
+- 200M = 15K
+- 300M = 21K
+- 400M = 28K
+- 500M = 35K
+- 600M = 42K
+- 700M = 49K
+- 800M = 55K
+- 900M = 60K
+- 1B = 65K
+- 20B–99B = x64K
+
+The 20B–99B rate is recorded exactly as "x64K" in the supplied price list. Do not infer a different calculation when the intended total is unclear; ask for the desired quantity.
+
+## Payment Destinations
+
+The customer must confirm before making a payment.
+
+- Bank BCA: 0322745611, account name Toni
+- SeaBank: 901468161964, account name Toni
+- Bank BRI: 03210109 4418508, account name Toni
+
+Return these numbers exactly as written. Never alter, reconstruct, or guess a payment destination.
+
+## QRIS
+
+QRIS is available. The customer must chat with the admin to request the current QRIS.
+
+## Payment Rules
+
+- The customer must confirm with the admin before transferring.
+- The customer must send clear, detailed transfer proof.
+- The customer is responsible for entering the correct ID.
+- If transfer proof is not sent within 30 minutes, it expires and will no longer be accepted.
+
+Do not confirm a payment as successful merely because the customer says they transferred. Payment completion requires verified proof and fulfillment status.

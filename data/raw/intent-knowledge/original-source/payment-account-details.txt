@@ -1,0 +1,67 @@
+Payment / Account Details Intent Playbook
+
+Intent ID: INT_PAYMENT_DETAILS
+Priority: P0
+Source type: Observed frontliner-derived taxonomy
+
+## Retrieval Profile
+
+Customer goal: Get correct bank/account/payment destination.
+Classification cues: rek mana; nomor rekening; bank apa; kirim ke mana; rekening yang mana
+Semantic retrieval text: Intent: Payment / Account Details. Customer goal: Get correct bank/account/payment destination. Typical phrases: rek mana; nomor rekening; bank apa; kirim ke mana; rekening yang mana. Meaning: customer asks where or to which account/payment destination to send funds.
+
+## Customer Utterance Examples
+
+- rek mana — customer asks where or to which account/payment destination to send funds
+- nomor rekening — customer asks where or to which account/payment destination to send funds
+- bank apa — customer asks where or to which account/payment destination to send funds
+- kirim ke mana — customer asks where or to which account/payment destination to send funds
+- rekening yang mana — customer asks where or to which account/payment destination to send funds
+
+## Required Context and Routing
+
+Required context or entities: requested payment method; active approved destination from config/backend
+Default bot action: Return account details only from approved backend/config; never invent or alter numbers.
+Backend or tool requirement: Approved payment destination/config service
+Escalation triggers: No valid destination, conflict with context, or transfer sent elsewhere.
+Success signal: Correct approved destination delivered
+
+## Behavior Rules
+
+### Customer asks destination
+Required action: Return approved active payment details.
+Do not: Never invent, alter, or recall account numbers from memory.
+Required data or tool: Approved payment destination/config service
+Escalate if: No valid destination or conflicting context
+Example response: “Siap bos, ini yang aktif: [PAYMENT_METHOD] — [PAYMENT_DESTINATION].”
+
+### Requested destination unavailable
+Required action: Check another approved active option.
+Do not: Do not provide stale destination.
+Required data or tool: Approved config service
+Escalate if: No approved alternative
+Example response: “Yang ini lagi nggak tersedia bos. Saya cek opsi yang aktif dulu ya.”
+
+## Ambiguity Guidance
+
+### Compared with Top Up / Deposit (INT_TOPUP)
+Why they overlap: Top-up flow often includes asking where to transfer.
+Prefer this intent when: User specifically asks for bank/account/payment destination.
+Prefer Top Up / Deposit when: User wants to begin/add balance and amount/flow is the main need.
+Context to check: Whether amount/top-up was already established in prior turn
+Classifier guidance: Choose the narrowest immediate need; Payment Details can be a substep of Top Up.
+
+### Compared with General Help / How-to (INT_GENERAL_HELP)
+Why they overlap: “bisa pake bank apa” is informational while “rek mana” asks for a live destination.
+Prefer this intent when: User asks for the current active destination/account to send money to.
+Prefer General Help / How-to when: User asks supported methods or general process.
+Context to check: Question asks capability vs specific live destination
+Classifier guidance: General Help uses approved knowledge; Payment Details requires live config/backend.
+
+## Response Style Examples
+
+“Siap bos, ini yang aktif: [PAYMENT_METHOD] — [PAYMENT_DESTINATION]. Transfer sesuai nominal ya, kalau udah kirim buktinya.”
+If unavailable: “Yang ini lagi nggak tersedia bos. Saya cek opsi yang aktif dulu ya.”
+Never type account numbers from memory; placeholders must come from system/config.
+
+Dialogue examples guide tone and behavior only. They are not proof of live status or factual truth. Live facts must come from approved configuration or backend tools.

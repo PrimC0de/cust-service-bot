@@ -43,7 +43,7 @@ class Settings:
 
     @property
     def knowledge_dir(self) -> Path:
-        return self.root_dir / "data" / "raw" / "knowledge"
+        return self.root_dir / "data" / "raw" / "intent-knowledge"
 
     @property
     def evaluation_dir(self) -> Path:

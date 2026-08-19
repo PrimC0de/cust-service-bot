@@ -1,0 +1,92 @@
+Bongkar / Withdrawal Intent Playbook
+
+Intent ID: INT_WITHDRAWAL
+Priority: P0
+Source type: Observed frontliner-derived taxonomy
+
+## Retrieval Profile
+
+Customer goal: Withdraw/convert balance and understand requirements/status.
+Classification cues: bongkar; tarik; wd; cairin; mau keluar; proses bongkar; minimal bongkar; id bongkar; harga bongkaran; rate bongkar; tanpa order
+Semantic retrieval text: Intent: Bongkar / Withdrawal. Customer goal: Withdraw/convert balance and understand requirements/status. Typical phrases: bongkar; tarik; wd; cairin; mau keluar; proses bongkar. Meaning: customer wants to withdraw or cash out balance.
+
+## Customer Utterance Examples
+
+- bongkar — customer wants to withdraw or cash out balance
+- tarik — customer wants to withdraw or cash out balance
+- wd — customer wants to withdraw or cash out balance
+- cairin — customer wants to withdraw or cash out balance
+- mau keluar — customer wants to withdraw or cash out balance
+- proses bongkar — customer wants to withdraw or cash out balance
+- minimal bongkar — customer asks for the minimum withdrawal amount
+- id bongkar — customer asks where to send the withdrawal order
+- harga bongkaran — customer asks for the withdrawal rate
+- tanpa order — customer asks for the rate without an order
+
+## Required Context and Routing
+
+Required context or entities: amount; customer/account ID; destination account/e-wallet; balance/eligibility; transaction context
+Default bot action: Identify request, collect only missing required details, submit safely, and report actual status.
+Backend or tool requirement: Balance/account lookup; withdrawal request; eligibility checks; fulfillment status
+Escalation triggers: Account mismatch, insufficient balance, policy exception, or processing failure.
+Success signal: Withdrawal accepted and actual completion confirmed
+
+## Behavior Rules
+
+### Approved bongkar details
+Minimum bongkar: 1B.
+Send to ID: 405060.
+ID bongkar: 405060, Coin House2.
+
+Required customer details:
+
+- ID and account name
+- Amount
+- Bank account or e-wallet number
+- Payment method
+- Account holder name
+
+Ask the customer to check the destination account number again. Payment is made by copying the account number exactly as supplied.
+
+### Bongkar rates
+- Harga bongkaran: X60/B
+- Tanpa order di kami: X55/B
+
+Keep the rate notation exactly as supplied. Do not infer a different calculation when the requested amount or applicable rate is unclear.
+
+### Requests that are not processed
+Do not process a request with the wrong sender ID, wrong amount, retail/eceran amount, wrong destination, or a submission more than six hours old.
+
+### Amount missing
+Required action: Ask withdrawal amount.
+Do not: Do not infer amount.
+Required data or tool: Conversation context
+Example response: “Siap bos, bongkar berapa?”
+
+### Required details missing
+Required action: Collect only missing account/destination details.
+Do not: Do not request unnecessary sensitive data.
+Required data or tool: Account/balance/eligibility lookup
+Escalate if: Account mismatch or insufficient balance
+Example response: “ID + nominal + rekening/e-wallet tujuan kirim ya.”
+
+### Request submitted / processing
+Required action: Report actual status from backend.
+Do not: Do not claim payout complete while pending.
+Required data or tool: Withdrawal request + fulfillment status
+Escalate if: Policy exception or processing failure
+Example response: “Masih proses bos, belum selesai ya.”
+
+## Ambiguity Guidance
+
+No specific ambiguity pair is defined.
+
+## Response Style Examples
+
+First: “Siap bos, bongkar berapa?”
+If details missing: “ID + nominal + rekening/e-wallet tujuan kirim ya.”
+After customer sends details/proof: “Oke bos, saya cek dulu ya.”
+If still pending: “Masih proses bos, belum selesai ya.”
+Only after payout confirmed: “Udah dibayar bos ✅”
+
+Dialogue examples guide tone and behavior only. They are not proof of live status or factual truth. Live facts must come from approved configuration or backend tools.

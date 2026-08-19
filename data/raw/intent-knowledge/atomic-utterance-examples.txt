@@ -1,0 +1,71 @@
+Atomic Utterance Examples
+
+Format: example_id | utterance | intent_id | intent_name | language | example_type | source | requires_context | notes
+
+EX_WITHDRAWAL_001 | bongkar | INT_WITHDRAWAL | Bongkar / Withdrawal | id | short-form | original-source/bongkar-withdrawal.txt | false | direct domain term
+EX_WITHDRAWAL_002 | tarik | INT_WITHDRAWAL | Bongkar / Withdrawal | id | short-form | original-source/bongkar-withdrawal.txt | true | may mean withdraw when account context is active
+EX_WITHDRAWAL_003 | wd | INT_WITHDRAWAL | Bongkar / Withdrawal | id | slang | original-source/bongkar-withdrawal.txt | false | withdrawal abbreviation
+EX_WITHDRAWAL_004 | cairin | INT_WITHDRAWAL | Bongkar / Withdrawal | id | slang | original-source/bongkar-withdrawal.txt | true | needs balance or transaction context
+EX_WITHDRAWAL_005 | mau keluar | INT_WITHDRAWAL | Bongkar / Withdrawal | id | action-request | original-source/bongkar-withdrawal.txt | true | incomplete without balance context
+EX_WITHDRAWAL_006 | proses bongkar | INT_WITHDRAWAL | Bongkar / Withdrawal | id | action-request | original-source/bongkar-withdrawal.txt | false | direct withdrawal flow
+EX_WITHDRAWAL_007 | minimal bongkar | INT_WITHDRAWAL | Bongkar / Withdrawal | id | question | original-source/bongkar-withdrawal.txt | false | asks approved minimum
+EX_WITHDRAWAL_008 | id bongkar | INT_WITHDRAWAL | Bongkar / Withdrawal | id | information-request | original-source/bongkar-withdrawal.txt | false | asks approved destination ID
+EX_WITHDRAWAL_009 | harga bongkaran | INT_WITHDRAWAL | Bongkar / Withdrawal | id | information-request | original-source/bongkar-withdrawal.txt | false | asks withdrawal rate
+EX_WITHDRAWAL_010 | rate bongkar | INT_WITHDRAWAL | Bongkar / Withdrawal | id | short-form | original-source/bongkar-withdrawal.txt | false | asks withdrawal rate
+EX_WITHDRAWAL_011 | tanpa order | INT_WITHDRAWAL | Bongkar / Withdrawal | id | continuation | original-source/bongkar-withdrawal.txt | true | rate question requiring prior bongkar context
+
+EX_GENERAL_001 | caranya gimana | INT_GENERAL_HELP | General Help / How-to | id | question | original-source/general-help-how-to.txt | true | topic must come from context
+EX_GENERAL_002 | minimal berapa | INT_GENERAL_HELP | General Help / How-to | id | question | original-source/general-help-how-to.txt | true | amount or product must come from context
+EX_GENERAL_003 | bisa pake bank apa | INT_GENERAL_HELP | General Help / How-to | id | question | original-source/general-help-how-to.txt | true | asks supported methods, not necessarily a live destination
+EX_GENERAL_004 | gimana prosesnya | INT_GENERAL_HELP | General Help / How-to | id | question | original-source/general-help-how-to.txt | true | topic must come from context
+EX_GENERAL_005 | harus apa | INT_GENERAL_HELP | General Help / How-to | id | continuation | original-source/general-help-how-to.txt | true | requires the preceding topic
+
+EX_PAYMENT_001 | rek mana | INT_PAYMENT_DETAILS | Payment / Account Details | id | slang | original-source/payment-account-details.txt | true | exact flow determines destination
+EX_PAYMENT_002 | nomor rekening | INT_PAYMENT_DETAILS | Payment / Account Details | id | short-form | original-source/payment-account-details.txt | true | exact payment flow may be missing
+EX_PAYMENT_003 | bank apa | INT_PAYMENT_DETAILS | Payment / Account Details | id | question | original-source/payment-account-details.txt | true | could ask supported method instead
+EX_PAYMENT_004 | kirim ke mana | INT_PAYMENT_DETAILS | Payment / Account Details | id | question | original-source/payment-account-details.txt | true | requires active transaction context
+EX_PAYMENT_005 | rekening yang mana | INT_PAYMENT_DETAILS | Payment / Account Details | id | question | original-source/payment-account-details.txt | true | requires active transaction context
+
+EX_COMPLAINT_001 | kok belum masuk | INT_COMPLAINT | Problem / Complaint | id | complaint | original-source/problem-complaint.txt | true | near-neighbor of transaction status
+EX_COMPLAINT_002 | salah | INT_COMPLAINT | Problem / Complaint | id | short-form | original-source/problem-complaint.txt | true | object of error must come from context
+EX_COMPLAINT_003 | gagal | INT_COMPLAINT | Problem / Complaint | id | complaint | original-source/problem-complaint.txt | true | failed operation must come from context
+EX_COMPLAINT_004 | lama | INT_COMPLAINT | Problem / Complaint | id | complaint | original-source/problem-complaint.txt | true | near-neighbor of transaction status
+EX_COMPLAINT_005 | ga bisa | INT_COMPLAINT | Problem / Complaint | id | complaint | original-source/problem-complaint.txt | true | failed action must come from context
+EX_COMPLAINT_006 | uangnya mana | INT_COMPLAINT | Problem / Complaint | id | complaint | original-source/problem-complaint.txt | true | money discrepancy framing
+EX_COMPLAINT_007 | tolong cek | INT_COMPLAINT | Problem / Complaint | id | action-request | original-source/problem-complaint.txt | true | requires object or transaction context
+
+EX_PROOF_001 | image | INT_PROOF_TRANSFER | Proof of Transfer / Receipt | en | short-form | original-source/proof-transfer-receipt.txt | true | attachment presence is the disambiguating signal
+EX_PROOF_002 | nih bukti | INT_PROOF_TRANSFER | Proof of Transfer / Receipt | id | slang | original-source/proof-transfer-receipt.txt | false | direct evidence submission
+EX_PROOF_003 | udah transfer | INT_PROOF_TRANSFER | Proof of Transfer / Receipt | id | confirmation | original-source/proof-transfer-receipt.txt | true | may be a top-up continuation or status request
+EX_PROOF_004 | cek ya | INT_PROOF_TRANSFER | Proof of Transfer / Receipt | id | action-request | original-source/proof-transfer-receipt.txt | true | evidence or transaction must come from context
+EX_PROOF_005 | ini struknya | INT_PROOF_TRANSFER | Proof of Transfer / Receipt | id | confirmation | original-source/proof-transfer-receipt.txt | false | direct receipt submission
+
+EX_ROYAL_001 | harga royal dream | INT_ROYAL_DREAM_PRICELIST | Royal Dream Pricelist and Payment | id | information-request | original-source/royal-dream-pricelist-payment.txt | false | product-specific price request
+EX_ROYAL_002 | pricelist royal dream | INT_ROYAL_DREAM_PRICELIST | Royal Dream Pricelist and Payment | id | information-request | original-source/royal-dream-pricelist-payment.txt | false | asks complete price list
+EX_ROYAL_003 | harga 100m | INT_ROYAL_DREAM_PRICELIST | Royal Dream Pricelist and Payment | id | short-form | original-source/royal-dream-pricelist-payment.txt | true | Royal Dream context may be required
+EX_ROYAL_004 | harga 500m | INT_ROYAL_DREAM_PRICELIST | Royal Dream Pricelist and Payment | id | short-form | original-source/royal-dream-pricelist-payment.txt | true | Royal Dream context may be required
+EX_ROYAL_005 | harga 1b | INT_ROYAL_DREAM_PRICELIST | Royal Dream Pricelist and Payment | id | short-form | original-source/royal-dream-pricelist-payment.txt | true | Royal Dream context may be required
+EX_ROYAL_006 | rate 20b | INT_ROYAL_DREAM_PRICELIST | Royal Dream Pricelist and Payment | id | short-form | original-source/royal-dream-pricelist-payment.txt | true | preserve supplied x64K notation
+EX_ROYAL_007 | rekening royal dream | INT_ROYAL_DREAM_PRICELIST | Royal Dream Pricelist and Payment | id | information-request | original-source/royal-dream-pricelist-payment.txt | false | product-specific payment destination
+EX_ROYAL_008 | bayar royal dream | INT_ROYAL_DREAM_PRICELIST | Royal Dream Pricelist and Payment | id | action-request | original-source/royal-dream-pricelist-payment.txt | false | product-specific payment flow
+EX_ROYAL_009 | qris royal dream | INT_ROYAL_DREAM_PRICELIST | Royal Dream Pricelist and Payment | id | information-request | original-source/royal-dream-pricelist-payment.txt | false | product-specific QRIS request
+EX_ROYAL_010 | berapa harga 100m | INT_ROYAL_DREAM_PRICELIST | Royal Dream Pricelist and Payment | id | question | original-source/royal-dream-pricelist-payment.txt | true | Royal Dream context may be required
+EX_ROYAL_011 | harga 500m berapa | INT_ROYAL_DREAM_PRICELIST | Royal Dream Pricelist and Payment | id | question | original-source/royal-dream-pricelist-payment.txt | true | Royal Dream context may be required
+EX_ROYAL_012 | rate 20b berapa | INT_ROYAL_DREAM_PRICELIST | Royal Dream Pricelist and Payment | id | question | original-source/royal-dream-pricelist-payment.txt | true | preserve supplied x64K notation
+EX_ROYAL_013 | rekening bca royal dream | INT_ROYAL_DREAM_PRICELIST | Royal Dream Pricelist and Payment | id | information-request | original-source/royal-dream-pricelist-payment.txt | false | product-specific destination
+EX_ROYAL_014 | royal dream bisa bayar pakai apa | INT_ROYAL_DREAM_PRICELIST | Royal Dream Pricelist and Payment | id | question | original-source/royal-dream-pricelist-payment.txt | false | asks product-specific supported payment
+EX_ROYAL_015 | minta qris royal dream | INT_ROYAL_DREAM_PRICELIST | Royal Dream Pricelist and Payment | id | action-request | original-source/royal-dream-pricelist-payment.txt | false | asks for current QRIS through admin
+
+EX_TOPUP_001 | topup | INT_TOPUP | Top Up / Deposit | id | short-form | original-source/top-up-deposit.txt | false | direct top-up term
+EX_TOPUP_002 | depo | INT_TOPUP | Top Up / Deposit | id | slang | original-source/top-up-deposit.txt | false | deposit abbreviation
+EX_TOPUP_003 | isi saldo | INT_TOPUP | Top Up / Deposit | id | action-request | original-source/top-up-deposit.txt | false | direct balance-add request
+EX_TOPUP_004 | mau masuk | INT_TOPUP | Top Up / Deposit | id | action-request | original-source/top-up-deposit.txt | true | object may require conversation context
+EX_TOPUP_005 | rek mana | INT_TOPUP | Top Up / Deposit | id | ambiguous | original-source/top-up-deposit.txt | true | intentionally retained near-neighbor with payment details
+EX_TOPUP_006 | transfer kemana | INT_TOPUP | Top Up / Deposit | id | continuation | original-source/top-up-deposit.txt | true | active top-up flow required
+
+EX_STATUS_001 | udah masuk? | INT_TX_STATUS | Transaction Status | id | status-request | original-source/transaction-status.txt | true | transaction must be identifiable from context
+EX_STATUS_002 | sudah? | INT_TX_STATUS | Transaction Status | id | continuation | original-source/transaction-status.txt | true | inherently ambiguous without prior turn
+EX_STATUS_003 | gimana statusnya | INT_TX_STATUS | Transaction Status | id | status-request | original-source/transaction-status.txt | true | transaction must be identifiable
+EX_STATUS_004 | kok belum | INT_TX_STATUS | Transaction Status | id | status-request | original-source/transaction-status.txt | true | near-neighbor of complaint
+EX_STATUS_005 | masih proses? | INT_TX_STATUS | Transaction Status | id | status-request | original-source/transaction-status.txt | true | transaction must be identifiable
+EX_STATUS_006 | done? | INT_TX_STATUS | Transaction Status | en | status-request | original-source/transaction-status.txt | true | transaction must be identifiable

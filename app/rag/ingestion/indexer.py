@@ -65,23 +65,34 @@ def calibrate_confidence(
     similarities = query_vectors @ chunk_vectors.T
     ids = np.argsort(-similarities, axis=1)[:, : min(top_k, len(chunks))]
     scores = np.take_along_axis(similarities, ids, axis=1)
-    positive_scores: list[float] = []
-    negative_scores: list[float] = []
+    positive_scores: list[tuple[float, str]] = []
+    negative_scores: list[tuple[float, str]] = []
     for case, case_scores, case_ids in zip(cases, scores, ids, strict=True):
         best_score = float(case_scores[0])
         expected = case.get("expected_source")
         if expected is None:
-            negative_scores.append(best_score)
+            negative_scores.append((best_score, case["query"]))
             continue
         sources = {chunks[int(identifier)].source for identifier in case_ids if identifier >= 0}
         if expected not in sources:
-            raise ValueError(f"Expected source absent from top {top_k}: {case['query']}")
-        positive_scores.append(best_score)
+            ranking = [
+                f"{chunks[int(identifier)].sub_category} ({float(score):.4f})"
+                for identifier, score in zip(case_ids, case_scores, strict=True)
+            ]
+            raise ValueError(
+                f"Expected source absent from top {top_k}: {case['query']}; "
+                f"ranked={ranking}"
+            )
+        positive_scores.append((best_score, case["query"]))
 
-    minimum_positive = min(positive_scores)
-    maximum_negative = max(negative_scores)
+    minimum_positive, weakest_positive = min(positive_scores)
+    maximum_negative, strongest_negative = max(negative_scores)
     if maximum_negative >= minimum_positive:
-        raise ValueError("Unsafe calibration: supported and out-of-KB scores overlap")
+        raise ValueError(
+            "Unsafe calibration: supported and out-of-KB scores overlap "
+            f"(min positive={minimum_positive:.4f} for {weakest_positive!r}, "
+            f"max negative={maximum_negative:.4f} for {strongest_negative!r})"
+        )
     return {
         "confidence_threshold": minimum_positive,
         "positive_cases": len(positive_scores),

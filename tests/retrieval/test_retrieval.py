@@ -9,6 +9,7 @@ import faiss
 import numpy as np
 
 from app.models import KnowledgeChunk
+from app.rag.ingestion.chunker import CHUNKING_METHOD
 from app.rag.retrieval.dense import DenseRetrievalError, DenseRetriever
 
 
@@ -50,7 +51,7 @@ class DenseTests(unittest.IsolatedAsyncioTestCase):
             json.dumps(
                 {
                     "schema_version": 2,
-                    "chunking_method": "structure-aware-v1",
+                    "chunking_method": CHUNKING_METHOD,
                     "embedding_provider": "openai",
                     "embedding_model": "model",
                     "chunk_count": 2,

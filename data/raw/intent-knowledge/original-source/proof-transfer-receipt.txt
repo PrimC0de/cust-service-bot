@@ -1,0 +1,74 @@
+Proof of Transfer / Receipt Intent Playbook
+
+Intent ID: INT_PROOF_TRANSFER
+Priority: P0
+Source type: Observed frontliner-derived taxonomy
+
+## Retrieval Profile
+
+Customer goal: Submit proof and get acknowledgement/verification.
+Classification cues: image; nih bukti; udah transfer; cek ya; ini struknya
+Semantic retrieval text: Intent: Proof of Transfer / Receipt. Customer goal: Submit proof and get acknowledgement/verification. Typical phrases: image; nih bukti; udah transfer; cek ya; ini struknya. Meaning: customer says payment was sent or provides a receipt/proof for verification.
+
+## Customer Utterance Examples
+
+- image — customer says payment was sent or provides a receipt/proof for verification
+- nih bukti — customer says payment was sent or provides a receipt/proof for verification
+- udah transfer — customer says payment was sent or provides a receipt/proof for verification
+- cek ya — customer says payment was sent or provides a receipt/proof for verification
+- ini struknya — customer says payment was sent or provides a receipt/proof for verification
+
+## Required Context and Routing
+
+Required context or entities: receipt/image; transaction reference; amount; destination; duplicate/freshness indicators
+Default bot action: Acknowledge naturally, verify evidence and mismatches, confirm completion only after fulfillment.
+Backend or tool requirement: Image ingestion; receipt extraction; duplicate/freshness/reference/amount/destination checks
+Escalation triggers: Unreadable, duplicate, mismatch, suspected edit/forgery, or no matching transaction.
+Success signal: Proof matched and verified
+
+## Behavior Rules
+
+### Receipt received
+Required action: Acknowledge and verify.
+Do not: Do not confirm completion before backend/system confirmation.
+Required data or tool: Image/receipt verification + matching transaction
+Example response: “Oke bos, bukti udah saya terima. Bentar saya cek dulu.”
+
+### Receipt unreadable
+Required action: Ask for a clearer/full image.
+Do not: Do not infer unreadable values.
+Required data or tool: Image ingestion
+Escalate if: Repeated unreadable evidence
+Example response: “Fotonya kurang kebaca bos, boleh kirim ulang yang full?”
+
+### Receipt mismatch
+Required action: Stop repeat payment and investigate mismatch.
+Do not: Do not tell customer to transfer again.
+Required data or tool: Amount/destination/reference checks
+Escalate if: Mismatch, duplicate, suspected edit/forgery
+Example response: “Nominal di bukti beda sama order bos. Saya cek dulu ya, jangan transfer lagi dulu.”
+
+## Ambiguity Guidance
+
+### Compared with Transaction Status (INT_TX_STATUS)
+Why they overlap: “udah transfer” may be either a proof submission or a status check.
+Prefer this intent when: User attaches/sends receipt or asks to verify evidence.
+Prefer Transaction Status when: User asks whether it has arrived/completed without providing evidence.
+Context to check: Attachment presence; previous bot request for proof; explicit “cek bukti” wording
+Classifier guidance: Attachment/request-for-verification strongly favors Proof of Transfer.
+
+### Compared with Top Up / Deposit (INT_TOPUP)
+Why they overlap: “udah transfer” can occur during the top-up workflow.
+Prefer this intent when: User explicitly provides proof/receipt or asks for proof verification.
+Prefer Top Up / Deposit when: User is still initiating/following the top-up flow and no proof is presented.
+Context to check: Prior assistant message; attachment presence
+Classifier guidance: Use state/history; do not classify each message independently when a flow is active.
+
+## Response Style Examples
+
+Receipt received: “Oke bos, bukti udah saya terima. Bentar saya cek dulu.”
+Unreadable: “Fotonya kurang kebaca bos, boleh kirim ulang yang full?”
+Mismatch: “Nominal di bukti beda sama order bos. Saya cek dulu ya, jangan transfer lagi dulu.”
+Only after system confirmation: “Udah masuk bos ✅”
+
+Dialogue examples guide tone and behavior only. They are not proof of live status or factual truth. Live facts must come from approved configuration or backend tools.

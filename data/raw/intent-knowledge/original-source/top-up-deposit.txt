@@ -1,0 +1,75 @@
+Top Up / Deposit Intent Playbook
+
+Intent ID: INT_TOPUP
+Priority: P0
+Source type: Observed frontliner-derived taxonomy
+
+## Retrieval Profile
+
+Customer goal: Add balance/credit quickly and know where/how much to transfer.
+Classification cues: topup; depo; isi saldo; mau masuk; rek mana; transfer kemana
+Semantic retrieval text: Intent: Top Up / Deposit. Customer goal: Add balance/credit quickly and know where/how much to transfer. Typical phrases: topup; depo; isi saldo; mau masuk; rek mana; transfer kemana. Meaning: customer wants to add balance/credit or start a deposit/top-up.
+
+## Customer Utterance Examples
+
+- topup — customer wants to add balance/credit or start a deposit/top-up
+- depo — customer wants to add balance/credit or start a deposit/top-up
+- isi saldo — customer wants to add balance/credit or start a deposit/top-up
+- mau masuk — customer wants to add balance/credit or start a deposit/top-up
+- rek mana — customer wants to add balance/credit or start a deposit/top-up
+- transfer kemana — customer wants to add balance/credit or start a deposit/top-up
+
+## Required Context and Routing
+
+Required context or entities: amount; active payment destination; transaction/order context; proof when available
+Default bot action: Confirm amount if needed, return valid payment destination from system/config, ask for proof, then verify before success.
+Backend or tool requirement: Payment lookup; transaction creation; proof verification; fulfillment status
+Escalation triggers: Destination unavailable, amount mismatch, proof uncertain, or fulfillment unconfirmed.
+Success signal: Verified funds + fulfillment confirmed
+
+## Behavior Rules
+
+### Amount missing
+Required action: Ask for the amount before proceeding.
+Do not: Do not invent amount or destination.
+Required data or tool: Conversation context
+Example response: “Siap bos, mau top berapa?”
+
+### Amount known
+Required action: Return only an active approved payment destination, then ask for proof after transfer.
+Do not: Do not type destination from memory or an unapproved source.
+Required data or tool: Approved payment destination/config service
+Escalate if: Destination unavailable or conflicting
+Example response: “Siap bos. Ini [PAYMENT_DESTINATION] yang aktif. Kalau udah transfer, kirim buktinya ya.”
+
+### Proof received
+Required action: Verify proof and fulfillment status.
+Do not: Do not confirm balance credited before verification + fulfillment.
+Required data or tool: Proof verification + transaction/fulfillment status
+Escalate if: Mismatch, uncertain proof, or unconfirmed fulfillment
+Example response: “Oke bos, bentar saya cek dulu.”
+
+## Ambiguity Guidance
+
+### Compared with Payment / Account Details (INT_PAYMENT_DETAILS)
+Why they overlap: Top-up flow often includes asking where to transfer.
+Prefer this intent when: User wants to begin/add balance and amount/flow is the main need.
+Prefer Payment / Account Details when: User specifically asks for bank/account/payment destination.
+Context to check: Whether amount/top-up was already established in prior turn
+Classifier guidance: Choose the narrowest immediate need; Payment Details can be a substep of Top Up.
+
+### Compared with Proof of Transfer / Receipt (INT_PROOF_TRANSFER)
+Why they overlap: “udah transfer” can occur during the top-up workflow.
+Prefer this intent when: User is still initiating/following the top-up flow and no proof is presented.
+Prefer Proof of Transfer / Receipt when: User explicitly provides proof/receipt or asks for proof verification.
+Context to check: Prior assistant message; attachment presence
+Classifier guidance: Use state/history; do not classify each message independently when a flow is active.
+
+## Response Style Examples
+
+First: “Siap bos, mau top berapa?”
+If amount known: “Siap bos. Ini [PAYMENT_DESTINATION] yang aktif. Kalau udah transfer, kirim buktinya ya.”
+After proof: “Oke bos, bentar saya cek dulu.”
+Only after verified + fulfilled: “Udah masuk bos ✅”
+
+Dialogue examples guide tone and behavior only. They are not proof of live status or factual truth. Live facts must come from approved configuration or backend tools.

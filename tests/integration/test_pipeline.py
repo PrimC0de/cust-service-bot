@@ -109,6 +109,21 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(retriever.queries, ["How do I deposit USDT?"])
         self.assertEqual(generation.calls, [("compose", "primary")])
 
+    async def test_retrieval_decision_logs_requested_diagnostics(self):
+        with self.assertLogs("app.rag.pipeline", level="INFO") as captured:
+            await self.pipeline(FakeRetriever([STRONG]), FakeGeneration()).run(
+                "  Harga 500M  ", (), PRIMARY, batch_id="b-log"
+            )
+        output = "\n".join(captured.output)
+        self.assertIn("INPUT", output)
+        self.assertIn("NORMALIZED INPUT\n'harga 500m'", output)
+        self.assertIn("RETRIEVED EXAMPLES\n1. KB fact", output)
+        self.assertIn("intent = sub", output)
+        self.assertIn("confidence = 0.8000", output)
+        self.assertIn("amount = 500M", output)
+        self.assertIn("WORKFLOW SELECTED\ngrounded_composition", output)
+        self.assertIn("FALLBACK REASON\nnone", output)
+
     async def test_weak_retrieval_reformulates_once_then_composes(self):
         retriever = FakeRetriever([WEAK, STRONG])
         generation = FakeGeneration()

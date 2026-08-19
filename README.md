@@ -27,13 +27,13 @@ Model names and routing behavior are fixed in code. Telegram users listed in `TE
 
 ## Build retrieval artifacts
 
-Place approved `.txt` or `.md` documents under `data/raw/knowledge/<category>/`. Every category/document filename pair must exist in `data/taxonomy.json`.
+Place intent playbooks under `data/raw/intent-knowledge/`. The previous files under `data/raw/knowledge/` remain available but are not indexed by this command.
 
 ```bash
 python -m scripts.ingest --rebuild
 ```
 
-Ingestion parses document structure, merges small related sections, splits large sections at 500 characters with 50-character overlap, and writes ordered metadata plus a normalized FAISS index under `data/indexes/`. It calibrates the confidence cutoff from `data/evaluation/retrieval_cases.json` and refuses to build when supported and out-of-KB scores overlap. Temporary files are atomically installed only after embedding and calibration succeed.
+Ingestion embeds each row in `atomic-utterance-examples.txt` independently. Intent catalog, behavior rules, and ambiguity records are attached as grounded context but are not embedded. Files under `original-source/` are retained only for traceability. Ingestion writes the normalized FAISS index under `data/indexes/`, calibrates the confidence cutoff from `data/evaluation/retrieval_cases.json`, and installs artifacts only after calibration succeeds.
 
 Rebuild whenever the chunking schema, embedding model, KB, or retrieval evaluation changes. There is no lexical-only fallback.
 
